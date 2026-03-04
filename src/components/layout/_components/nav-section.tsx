@@ -54,15 +54,16 @@ export const NavSection = () => {
       title: "Fixed income",
       path: ROUTES.fixed_income,
       icon: <BankIcon />,
-      isActive: pathname === ROUTES.fixed_income,
-      isComingSoon: true,
+      isActive:
+        pathname === ROUTES.fixed_income ||
+        pathname.startsWith("/fixed-income"),
     },
     {
       title: "Trustees",
       path: ROUTES.trustees,
       icon: <NewspaperClippingIcon />,
-      isActive: pathname === ROUTES.trustees,
-      isComingSoon: true,
+      isActive:
+        pathname === ROUTES.trustees || pathname.startsWith("/trustees"),
     },
   ];
 

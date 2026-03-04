@@ -3,7 +3,21 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ['ngxgeneralstorage.blob.core.windows.net'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ngxgeneralstorage.blob.core.windows.net",
+        pathname: "/**",
+      },
+    ],
+  },
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
+      },
+    },
   },
   webpack(config) {
     config.module.rules.push({

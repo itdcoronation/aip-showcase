@@ -1,7 +1,7 @@
-// import { FixedIncome } from "./_components/fixed-income";
+import { FixedIncome } from "./_components/fixed-income";
 // import { MutualFunds } from "./_components/mutual-funds";
 import { TopRecommendedStocks } from "./_components/top-recommended-stocks";
-// import { Trustees } from "./_components/trustees";
+import { Trustees } from "./_components/trustees";
 
 const RecommendedProductsUI = () => {
   return (
@@ -12,9 +12,9 @@ const RecommendedProductsUI = () => {
         </header>
         <section className="grid gap-8">
           <TopRecommendedStocks />
-          {/* <MutualFunds />
           <FixedIncome />
-          <Trustees /> */}
+          <Trustees />
+          {/* <MutualFunds /> */}
         </section>
       </section>
     </>
