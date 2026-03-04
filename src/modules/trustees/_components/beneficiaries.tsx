@@ -22,8 +22,9 @@ export const Beneficiaries = ({
 
   const handleAddBeneficiary = (data: AddBeneficiaryFormData) => {
     if (selected !== undefined) {
-      beneficiaries[selected] = data;
-      setBeneficiaries([...beneficiaries]);
+      setBeneficiaries((prev) =>
+        prev.map((item, index) => (index === selected ? data : item))
+      );
       setSelected(undefined);
     } else {
       setBeneficiaries((prev) => [...prev, data]);

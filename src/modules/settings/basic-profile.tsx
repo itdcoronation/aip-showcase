@@ -17,9 +17,7 @@ const BasicProfileUI = () => {
     return `${bvn.slice(0, 3)}*****${bvn.slice(8)}`;
   };
 
-  if (data?.bvn) {
-    data.bvn = maskBVN(data.bvn);
-  }
+  const maskedBvn = data?.bvn ? maskBVN(data.bvn) : "";
 
   return (
     <div className="max-w-md">
@@ -44,7 +42,7 @@ const BasicProfileUI = () => {
         <PersonalInfoForm
           initData={{
             email:  data?.email_address || "",
-            bvn:  data?.bvn || "",
+            bvn: maskedBvn,
             phone:  data?.telephone || "",
             alt_phone: data?.alternate_phone || "",
             first_name: data?.first_name || "",

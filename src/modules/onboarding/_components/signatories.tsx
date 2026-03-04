@@ -63,8 +63,9 @@ const SignatoriesForm: React.FC<SignatoriesFormProps> = ({
   const handleSave = (data: SignatoryInfoData) => {
     console.log("Form submitted:", data);
     if (selected !== undefined) {
-      signatories[selected] = data;
-      setSignatories([...signatories]);
+      setSignatories((prev) =>
+        prev.map((item, index) => (index === selected ? data : item))
+      );
       setSelected(undefined);
     } else {
       setSignatories((prev) => [...prev, data]);

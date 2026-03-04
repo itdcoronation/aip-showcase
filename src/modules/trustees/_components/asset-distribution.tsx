@@ -27,8 +27,9 @@ export const AssetDistribution = ({
 
   const handleAddBeneficiary = (data: AssetDistributionFormData) => {
     if (selected !== undefined) {
-      distribution[selected] = data;
-      setDistribution([...distribution]);
+      setDistribution((prev) =>
+        prev.map((item, index) => (index === selected ? data : item))
+      );
       setSelected(undefined);
     } else {
       setDistribution((prev) => [...prev, data]);

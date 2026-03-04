@@ -1,26 +1,30 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import nextVitals from "eslint-config-next/core-web-vitals";
+import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
 
 const eslintConfig = [
-  ...compat.extends(
-    "next/core-web-vitals",
-    "next/typescript"
-  ),
+  ...nextVitals,
   {
+    files: ["**/*.ts", "**/*.tsx"],
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
+    },
     rules: {
-      "@typescript-eslint/no-explicit-any": "warn", 
-      "react-hooks/exhaustive-deps": "warn", 
-      "@typescript-eslint/no-unused-expressions": "error" 
-    }
-  }
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-expressions": "error",
+    },
+  },
+  {
+    files: ["**/*.{js,jsx,ts,tsx,mjs,mts,cjs,cts}"],
+    plugins: {
+      "react-hooks": reactHooks,
+    },
+    rules: {
+      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/incompatible-library": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

@@ -29,8 +29,9 @@ export const PrivateTrustAssets = ({
 
   const handleAddBeneficiary = (data: PrivateTrustAssetFormData) => {
     if (selected !== undefined) {
-      assets[selected] = data;
-      setAssets([...assets]);
+      setAssets((prev) =>
+        prev.map((item, index) => (index === selected ? data : item))
+      );
       setSelected(undefined);
     } else {
       setAssets((prev) => [...prev, data]);

@@ -242,12 +242,27 @@ const useDropzone = <TUploadRes, TUploadError = string>(
 
   const _uploadFile = useCallback(
     async (file: File, id: string, tries = 0) => {
-      const result = await pOnDropFile(file);
+      let attempt = tries;
 
-      if (result.status === "error") {
-        if (autoRetry === true && tries < (maxRetryCount ?? Infinity)) {
+      while (true) {
+        const result = await pOnDropFile(file);
+
+        if (result.status !== "error") {
+          if (pOnFileUploaded !== undefined) {
+            pOnFileUploaded(result.result);
+          }
+          dispatch({
+            type: "update-status",
+            id,
+            ...result,
+          });
+          return;
+        }
+
+        if (autoRetry === true && attempt < (maxRetryCount ?? Infinity)) {
+          attempt += 1;
           dispatch({ type: "update-status", id, status: "pending" });
-          return _uploadFile(file, id, tries + 1);
+          continue;
         }
 
         dispatch({
@@ -264,14 +279,6 @@ const useDropzone = <TUploadRes, TUploadError = string>(
         }
         return;
       }
-      if (pOnFileUploaded !== undefined) {
-        pOnFileUploaded(result.result);
-      }
-      dispatch({
-        type: "update-status",
-        id,
-        ...result,
-      });
     },
     [
       autoRetry,

@@ -68,7 +68,7 @@ const SelectInputPaginated: React.FC<SelectInputPaginatedProps> = ({
     };
     el.addEventListener("scroll", handleScroll);
     return () => el.removeEventListener("scroll", handleScroll);
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, listRef?.current]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const fetchMore = () => {
     fetchNextPage();
