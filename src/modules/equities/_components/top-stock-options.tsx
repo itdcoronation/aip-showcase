@@ -4,35 +4,19 @@ import { ROUTES } from "@/lib/routes";
 import { TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFetchTopGainers } from "@/requests/services/equities/balance";
-//import { useState } from "react";
-//import { NoticeModal } from "@/components/modals/notice-modal";
 
 export const TopStockOptions = () => {
   const router = useRouter();
-  // const [showComingSoonModal, setShowComingSoonModal] = useState(false);
   
   // Fetch top gainers data
   const { data: topGainersData, isLoading: topGainersLoading, error } = useFetchTopGainers();
 
-  // TODO: Will be integrated in later sprint
   const handleExploreEquities = () => {
     router.push(ROUTES.explore_equities);
-    // setShowComingSoonModal(true);
   };
 
   return (
     <>
-      {/* <NoticeModal
-        show={showComingSoonModal}
-        close={() => setShowComingSoonModal(false)}
-        type="info"
-        title="Coming Soon"
-        description="This feature is coming soon"
-        action={{
-          text: "Ok",
-          action: () => setShowComingSoonModal(false),
-        }}
-      /> */}
       <section className="overflow-hidden">
         <div className="flex-wrap flex items-center justify-between gap-2 mb-6">
           <div>

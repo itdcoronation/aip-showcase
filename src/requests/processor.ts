@@ -1,5 +1,6 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { getAccessToken } from "./token";
+import { isShowcaseMode } from "@/lib/showcase";
 
 const authBaseURL = `${process.env.NEXT_PUBLIC_AUTH_API_BASE_URL}/api`; // Auth service base URL
 const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`; // User service base URL
@@ -24,6 +25,28 @@ export const axiosInstanceAuth2 = axios.create({
 export const axiosInstanceAuth = axios.create({
   baseURL,
 });
+
+if (isShowcaseMode) {
+  const showcaseAdapter = async (config: InternalAxiosRequestConfig) => {
+    return {
+      data: {
+        success: true,
+        status: "success",
+        message: "Showcase mode: external API call skipped",
+        data: {},
+      },
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      config,
+      request: {},
+    };
+  };
+
+  axiosInstanceAuth.defaults.adapter = showcaseAdapter;
+  axiosInstanceAuth2.defaults.adapter = showcaseAdapter;
+  axiosInstanceUnauth.defaults.adapter = showcaseAdapter;
+}
 
 const unauthRequestInterceptor = async (config: InternalAxiosRequestConfig) => {
   if (config.headers) {
@@ -55,6 +78,8 @@ const authRequestInterceptor2 = async (config: InternalAxiosRequestConfig) => {
   return config;
 };
 
-axiosInstanceAuth.interceptors.request.use(authRequestInterceptor);
-axiosInstanceAuth2.interceptors.request.use(authRequestInterceptor2);
-axiosInstanceUnauth.interceptors.request.use(unauthRequestInterceptor);
+if (!isShowcaseMode) {
+  axiosInstanceAuth.interceptors.request.use(authRequestInterceptor);
+  axiosInstanceAuth2.interceptors.request.use(authRequestInterceptor2);
+  axiosInstanceUnauth.interceptors.request.use(unauthRequestInterceptor);
+}

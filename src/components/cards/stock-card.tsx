@@ -27,9 +27,7 @@ export const StockCard = ({
 
   return (
     <Link
-      // TODO: Will be integrated in different sprint - stock detail navigation
-      // href={`/equities/${stockCode}`}
-      href="#"
+      href={`/equities/${stockCode}`}
       className={cn(
         "min-w-[136px] max-w-[136px] p-4 bg-white shadow-sm border-0.5 border-[#EEEFF1] rounded-[16px] rounded-[24px]",
         className || ""

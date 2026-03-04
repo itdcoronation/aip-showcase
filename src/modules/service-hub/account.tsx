@@ -59,7 +59,6 @@ const AccountUI = () => {
                   "bg-white border-5 w-5 h-5 hidden md:inline-flex",
                   id === tab ? "border-bg-brand" : "border-bg-secondary"
                 )}
-                iconClassName="hidden"
               />
               <Label
                 className={cn(

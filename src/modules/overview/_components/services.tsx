@@ -33,7 +33,6 @@ export const Services = () => {
       titleClassName: "text-[#0E3C72] bg-[#84BAF8]",
       descriptionClassName: "bg-[#EEF5FF]",
       bgClassName: "bg-[url('/trustee-bg.svg')]",
-      disabled: true,
       path: "/trustees",
     },
     {
@@ -44,7 +43,6 @@ export const Services = () => {
       bgClassName: "bg-[url('/fixed-income-bg.svg')]",
       titleClassName: "text-[#330A62] bg-[#CBA5F8]",
       descriptionClassName: "bg-[#FAEFFF]",
-      disabled: true,
       path: "/fixed-income",
     },
    

@@ -3,21 +3,19 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Minus, PlusCircle/*, TrendingUp*/ } from "lucide-react";
 import Image from "next/image";
 import { mutualFundLogo, newsImg } from "@/assets/images";
-//import { MarketClosedBanner } from "./_components/market-closed";
+import { MarketClosedBanner } from "./_components/market-closed";
 import { ArrowElbowRightIcon } from "@/assets/vectors/icons";
 import { Collapsible } from "@/components/collapsible";
 import { CustomAreaChart } from "@/components/charts/area-chart";
 import { BoughtEquityUI } from "./bought-equity";
 import { useStockDetails } from "@/requests/services/equities/stock-details";
-import { NoticeModal } from "@/components/modals/notice-modal";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export const EquityUI = () => {
   const router = useRouter();
   const { id } = useParams();
   const searchParams = useSearchParams();
   const bought = searchParams.get("bought");
-  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
 
   const { data: stockDetailsData, isLoading: stockDetailsLoading, error: stockDetailsError } = useStockDetails({
     symbol: id as string
@@ -48,25 +46,12 @@ export const EquityUI = () => {
     );
   }
 
-  // TODO: Will be integrated in later sprint
   const handleBuyStock = () => {
-    // router.push(`/equities/${id}/buy`);
-    setShowComingSoonModal(true);
+    router.push(`/equities/${id}/buy`);
   };
 
   return (
     <>
-      <NoticeModal
-        show={showComingSoonModal}
-        close={() => setShowComingSoonModal(false)}
-        type="info"
-        title="Coming Soon"
-        description="This feature is coming soon"
-        action={{
-          text: "Ok",
-          action: () => setShowComingSoonModal(false),
-        }}
-      />
       <Button onClick={router.back} variant={"ghost"} size={"sm"}>
         <ArrowLeft /> Back
       </Button>
@@ -109,7 +94,7 @@ export const EquityUI = () => {
           </div>
         </div>
 
-       {/* <MarketClosedBanner addBreak /> */}
+        <MarketClosedBanner addBreak />
 
         <div className="grid sm:grid-cols-[2fr_1.4fr] gap-4">
           <Stats stockData={stockData} />

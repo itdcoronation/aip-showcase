@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { orderTypeOptions } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, PlusCircle, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -37,6 +37,8 @@ export const BuyStockUI = () => {
   const [show, setShow] = useState(false);
 
   const router = useRouter();
+  const { id } = useParams();
+  const stockName = typeof id === "string" ? id.toUpperCase() : "STOCK";
 
   const {
     handleSubmit,
@@ -72,7 +74,7 @@ export const BuyStockUI = () => {
               <ChevronRight className="min-w-[20px] !h-[20px]" />
             </>
           ),
-          action: console.log,
+          action: () => router.push("/equities"),
         }}
       />
 
@@ -83,7 +85,7 @@ export const BuyStockUI = () => {
       <section className="mx-auto max-w-[940px] mt-4 sm:mt-8">
         <div className="mb-4">
           <h2 className="text-h4 sm:text-h3 font-semibold text-txt-primary mb-1">
-            Purchase [stockName]
+            Purchase {stockName}
           </h2>
           <p className="text-p4 sm:text-p3 text-txt-tertiary">
             Please enter the amount of stock you want to buy.
@@ -160,6 +162,7 @@ export const BuyStockUI = () => {
                   variant={"outline"}
                   size="m"
                   className="bg-white w-full sm:w-fit"
+                  onClick={() => router.push("/equities/fund")}
                 >
                   Fund account <PlusCircle />
                 </Button>

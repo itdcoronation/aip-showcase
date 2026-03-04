@@ -10,6 +10,7 @@ import { useFetchOnboardingData } from "@/requests/services/onboarding/user-data
 import useUserStore from "@/store/user";
 import { ROUTES } from "./routes";
 import { useFetchRiskProfile } from "@/requests/services/user/risk-profile";
+import { isShowcaseMode } from "./showcase";
 
 export default function isAuth(Component: (props) => JSX.Element) {
   return function IsAuth(props: any) {
@@ -22,6 +23,11 @@ export default function isAuth(Component: (props) => JSX.Element) {
     const { staging_id } = useUserStore();
     // If tokens are missing, redirect to login
     useEffect(() => {
+      if (isShowcaseMode) {
+        setLoading(false);
+        return;
+      }
+
       if (!accessToken || !refreshToken) {
         toast.error(
           "Session not found. You must be logged in to access this page"
@@ -34,7 +40,7 @@ export default function isAuth(Component: (props) => JSX.Element) {
     }, [accessToken, refreshToken]);
 
     const { data: profileData, isPending } = useFetchProfile({
-      enabled: !!accessToken,
+      enabled: isShowcaseMode || !!accessToken,
     });
     const { refetch } = useGetOnboardingSteps(profileData?.data?.user?.email);
     useFetchRiskProfile();
@@ -42,7 +48,7 @@ export default function isAuth(Component: (props) => JSX.Element) {
     useFetchOnboardingData({
       id: staging_id ?? "",
       options: {
-        enabled: !!accessToken && !!staging_id,
+        enabled: (isShowcaseMode || !!accessToken) && !!staging_id,
       },
     });
 

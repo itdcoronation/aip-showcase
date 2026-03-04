@@ -34,7 +34,7 @@ const MutualFund = () => {
         />
       </div>
       <CompleteOnboardingBanner />
-      <div className="hidden">
+      <div>
         <TopRecommendedStocks />
       </div>
       <Services />

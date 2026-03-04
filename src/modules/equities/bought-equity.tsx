@@ -9,13 +9,11 @@ import { Collapsible } from "@/components/collapsible";
 import { CustomAreaChart } from "@/components/charts/area-chart";
 import { useStockDetails } from "@/requests/services/equities/stock-details";
 import { useFetchPortfolioFull } from "@/requests/services/portfolio/balance";
-import { NoticeModal } from "@/components/modals/notice-modal";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 const BoughtEquityUI = () => {
   const router = useRouter();
   const { id } = useParams();
-  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
 
   const { data: stockDetailsData, isLoading: stockDetailsLoading, error: stockDetailsError } = useStockDetails({
     symbol: id as string
@@ -51,30 +49,16 @@ const BoughtEquityUI = () => {
     );
   }
 
-  // TODO: Will be integrated in later sprint
   const handleBuyMore = () => {
-    // router.push(`/equities/${id}/buy`);
-    setShowComingSoonModal(true);
+    router.push(`/equities/${id}/buy`);
   };
   
   const handleSell = () => {
-    // router.push(`/equities/${id}/sell`);
-    setShowComingSoonModal(true);
+    router.push(`/equities/${id}/sell`);
   };
 
   return (
     <>
-      <NoticeModal
-        show={showComingSoonModal}
-        close={() => setShowComingSoonModal(false)}
-        type="info"
-        title="Coming Soon"
-        description="This feature is coming soon"
-        action={{
-          text: "Ok",
-          action: () => setShowComingSoonModal(false),
-        }}
-      />
       <Button onClick={router.back} variant={"ghost"} size={"sm"}>
         <ArrowLeft /> Back
       </Button>

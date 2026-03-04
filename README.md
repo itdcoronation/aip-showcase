@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Showcase Mode (UI Sample Site)
+
+This copy is configured to run as a UI showcase by default:
+
+- Integrations are mocked client-side for `/api/*` requests.
+- Protected routes are accessible in showcase mode.
+- Placeholder success responses are returned for feature flows.
+
+To explicitly control this mode, set:
+
+```bash
+NEXT_PUBLIC_SHOWCASE_MODE=true
+```
+
+To disable showcase behavior and use real integrations again:
+
+```bash
+NEXT_PUBLIC_SHOWCASE_MODE=false
+```
+
 ## Getting Started
 
 First, run the development server:

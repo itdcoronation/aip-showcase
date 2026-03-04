@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import useAuthStore from "@/store/authentication";
 import { useResendOTP } from "@/requests/services/auth/resend-otp";
 import { useCountdown } from "@/hooks/useCountdown";
+import { isShowcaseMode } from "@/lib/showcase";
 
 const VerifyEmailUI = () => {
   const router = useRouter();
@@ -91,7 +92,7 @@ const VerifyEmailUI = () => {
         <Button
           onClick={() => {
             if ((joint && step === 2) || !joint) {
-              router.push(ROUTES.login);
+              router.push(isShowcaseMode ? ROUTES.overview : ROUTES.login);
             } else {
               setStep(2);
               setSuccess(false);
@@ -100,7 +101,9 @@ const VerifyEmailUI = () => {
           className="w-full max-w-[360px] mt-auto sm:mt-0"
         >
           {(joint && step === 2) || !joint
-            ? "Continue to login"
+            ? isShowcaseMode
+              ? "Continue to app"
+              : "Continue to login"
             : "Confirm email for user 2"}
         </Button>
       ) : (

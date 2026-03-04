@@ -6,11 +6,12 @@ import { TopRecommendedStocks } from "./top-recommended-stocks";
 import { PlusCircle, Wallet2 } from "lucide-react";
 import { useFetchBrokerageBalance } from "@/requests/services/equities/balance";
 import { useFetchPortfolioBalance } from "@/requests/services/portfolio/balance";
-import { useMemo, useState } from "react";
-import { NoticeModal } from "@/components/modals/notice-modal";
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/lib/routes";
 
 const Equities = () => {
-  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
+  const router = useRouter();
 
   // Fetch brokerage balance data
   const { data: brokerageData, isLoading: brokerageLoading } = useFetchBrokerageBalance();
@@ -50,29 +51,15 @@ const Equities = () => {
     return valueChangePercentage || 0;
   }, [portfolioData, portfolioLoading]);
 
-  // TODO: Will be integrated in later sprint
   const handleFund = () => {
-    // router.push(ROUTES.equities_fund);
-    setShowComingSoonModal(true);
+    router.push(ROUTES.equities_fund);
   };
   const handleWithdraw = () => {
-    // router.push(ROUTES.equities_withdraw);
-    setShowComingSoonModal(true);
+    router.push(ROUTES.equities_withdraw);
   };
 
   return (
     <>
-      <NoticeModal
-        show={showComingSoonModal}
-        close={() => setShowComingSoonModal(false)}
-        type="info"
-        title="Coming Soon"
-        description="This feature is coming soon"
-        action={{
-          text: "Ok",
-          action: () => setShowComingSoonModal(false),
-        }}
-      />
       <section className="grid gap-10">
         <div className="flex-col sm:flex-row flex gap-8 sm:gap-10">
           <Balance
@@ -102,7 +89,7 @@ const Equities = () => {
           />
         </div>
         <CompleteOnboardingBanner />
-        <div className="hidden">
+        <div>
           <TopRecommendedStocks />
         </div>
         <Services />

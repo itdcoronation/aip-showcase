@@ -4,48 +4,47 @@ import { getEquityTableColumns } from "@/components/tables/equities-table/column
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/routes";
 import {
-  // EquityHistoryTableData,
+  EquityHistoryTableData,
   EquityTableData,
-  // PendingEquityTableData,
+  PendingEquityTableData,
 } from "@/types/equity";
 import { TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { mutualFundLogo } from "@/assets/images";
+import { mutualFundLogo } from "@/assets/images";
 import { useState, useMemo } from "react";
 import { NoticeModal } from "@/components/modals/notice-modal";
 import { useFetchPortfolioFull } from "@/requests/services/portfolio/balance";
-// import { useFetchPendingTrades } from "@/requests/services/equities/pending-trades";
-// import { useFetchHistoryTrades } from "@/requests/services/equities/history-trades";
+import { useFetchPendingTrades } from "@/requests/services/equities/pending-trades";
+import { useFetchHistoryTrades } from "@/requests/services/equities/history-trades";
 
 
 
 
 
 export const Assets = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const [cancel, setCancel] = useState<string | undefined>();
-  // const [showComingSoonModal, setShowComingSoonModal] = useState(false);
   const [type, setType] = useState<"trade" | "pending" | "history">("trade");
   
   // Fetch portfolio data
   const { data: portfolioData, isLoading: portfolioLoading } = useFetchPortfolioFull();
   
   // Fetch pending trades data
-  // const { data: pendingTradesData, isLoading: pendingTradesLoading } = useFetchPendingTrades();
+  const { data: pendingTradesData, isLoading: pendingTradesLoading } = useFetchPendingTrades();
   
   // Fetch history trades data
- // const { data: historyTradesData, isLoading: historyTradesLoading } = useFetchHistoryTrades();
+  const { data: historyTradesData, isLoading: historyTradesLoading } = useFetchHistoryTrades();
 
   // Helper function to format date from API format to display format
-  // const formatDate = (dateString: string): string => {
-  //   const date = new Date(dateString);
-  //   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  //   const day = date.getDate().toString().padStart(2, '0');
-  //   const month = months[date.getMonth()];
-  //   const year = date.getFullYear();
-  //   return `${day} ${month}, ${year}`;
-  // };
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month}, ${year}`;
+  };
 
   // Transform userStocks data to match EquityTableData interface
   const transformedTradesData = useMemo((): EquityTableData[] => {
@@ -69,64 +68,62 @@ export const Assets = () => {
   }, [portfolioData]);
 
   // Transform pending trades data to match PendingEquityTableData interface
-  // const transformedPendingTradesData = useMemo((): PendingEquityTableData[] => {
-  //   if (!pendingTradesData?.data?.data) return [];
-  //   
-  //   return pendingTradesData.data.data.map((trade) => ({
-  //     id: `${trade.StockCode}-${trade.ID}`,
-  //     name: trade.Name,
-  //     short_form: trade.StockCode,
-  //     logo: mutualFundLogo.src, // TODO: Add icon_url support when API provides it
-  //     txn_date: formatDate(trade.TxnDate),
-  //     txn_amount: Number(parseFloat(trade.QuotePrice).toFixed(2)),
-  //     units: Number(parseFloat(trade.Qty)),
-  //     txn_type: trade.TxnType.toLowerCase(),
-  //   }));
-  // }, [pendingTradesData]);
+  const transformedPendingTradesData = useMemo((): PendingEquityTableData[] => {
+    if (!pendingTradesData?.data?.data) return [];
+
+    return pendingTradesData.data.data.map((trade) => ({
+      id: `${trade.StockCode}-${trade.ID}`,
+      name: trade.Name,
+      short_form: trade.StockCode,
+      logo: mutualFundLogo.src,
+      txn_date: formatDate(trade.TxnDate),
+      txn_amount: Number(parseFloat(trade.QuotePrice).toFixed(2)),
+      units: Number(parseFloat(trade.Qty)),
+      txn_type: trade.TxnType.toLowerCase(),
+    }));
+  }, [pendingTradesData]);
 
   // Transform history trades data to match EquityHistoryTableData interface
-  // const transformedHistoryTradesData = useMemo((): EquityHistoryTableData[] => {
-  //   if (!historyTradesData?.data?.data) return [];
-  //   
-  //   return historyTradesData.data.data.map((trade, index) => ({
-  //     id: `${trade.Symbol}-${index}`,
-  //     name: trade.Symbol, // Will be updated later when API adds company name
-  //     short_form: trade.Symbol,
-  //     logo: mutualFundLogo.src, // TODO: Add icon_url support when API provides it
-  //     txn_date: formatDate(trade.TradeDate),
-  //     txn_amount: Number(parseFloat(trade["Est. Amt"]).toFixed(2)),
-  //     unit_price: Number(parseFloat(trade.UnitPrice).toFixed(2)),
-  //     units: Number(parseFloat(trade.Qty)),
-  //     txn_type: trade.TxnType.toLowerCase(),
-  //     status: "successful", // Default to successful, will be updated in v2 API
-  //   }));
-  // }, [historyTradesData]);
+  const transformedHistoryTradesData = useMemo((): EquityHistoryTableData[] => {
+    if (!historyTradesData?.data?.data) return [];
+
+    return historyTradesData.data.data.map((trade, index) => ({
+      id: `${trade.Symbol}-${index}`,
+      name: trade.Symbol,
+      short_form: trade.Symbol,
+      logo: mutualFundLogo.src,
+      txn_date: formatDate(trade.TradeDate),
+      txn_amount: Number(parseFloat(trade["Est. Amt"]).toFixed(2)),
+      unit_price: Number(parseFloat(trade.UnitPrice).toFixed(2)),
+      units: Number(parseFloat(trade.Qty)),
+      txn_type: trade.TxnType.toLowerCase(),
+      status: "successful",
+    }));
+  }, [historyTradesData]);
 
   const columns = getEquityTableColumns({
-    handleView: (/* id */) => {
-      // TODO: Will be integrated in later sprints
-      // router.push(`/equities/${id}?bought=true`);
-      // setShowComingSoonModal(true);
+    handleView: (id) => {
+      router.push(`/equities/${id}?bought=true`);
     },
     handleCancel: setCancel,
     type: type,
   });
 
   const noEquities =
-    transformedTradesData.length === 0;
-    // transformedPendingTradesData.length === 0 &&
-    // transformedHistoryTradesData.length === 0;
+    transformedTradesData.length === 0 &&
+    transformedPendingTradesData.length === 0 &&
+    transformedHistoryTradesData.length === 0;
 
   return (
     <>
       <NoticeModal
         show={!!cancel}
         close={() => setCancel(undefined)}
-        type="failure"
-        description="Write a better description for cancelling a sell or buy order"
-        title="Are you sure you want to cancel?"
+        type="info"
+        description="Your action has been handled in showcase mode."
+        title="Action completed"
         action={{
-          text: "Yes, Cancel",
+          text: "OK",
           action: () => setCancel(undefined),
         }}
         secondaryAction={{
@@ -134,17 +131,6 @@ export const Assets = () => {
           action: () => setCancel(undefined),
         }}
       />
-      {/* <NoticeModal
-        show={showComingSoonModal}
-        close={() => setShowComingSoonModal(false)}
-        type="info"
-        title="Coming Soon"
-        description="This feature is coming soon"
-        action={{
-          text: "Ok",
-          action: () => setShowComingSoonModal(false),
-        }}
-      /> */}
       {noEquities ? (
         <div className="bg-white shadow-sm border border-0.5 border-[#EEEFF1] py-12 px-4 rounded-[12px]">
           <EmptyAssets />
@@ -159,9 +145,8 @@ export const Assets = () => {
           >
             <TabsList className="mb-4">
               <TabsTrigger value="trade">Active</TabsTrigger>
-              {/* TODO: Will be displayed in future sprint */}
-              {/* <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger> */}
+              <TabsTrigger value="pending">Pending</TabsTrigger>
+              <TabsTrigger value="history">History</TabsTrigger>
             </TabsList>
             <TabsContent value="trade">
               {portfolioLoading ? (
@@ -174,8 +159,7 @@ export const Assets = () => {
                 <EmptyAssets />
               )}
             </TabsContent>
-            {/* TODO: Will be displayed in future sprint */}
-            {/* <TabsContent value="pending">
+            <TabsContent value="pending">
               {pendingTradesLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <p className="text-txt-secondary">Loading pending trades...</p>
@@ -186,7 +170,7 @@ export const Assets = () => {
                 <EmptyAssets />
               )}
             </TabsContent>
-             <TabsContent value="history">
+            <TabsContent value="history">
               {historyTradesLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <p className="text-txt-secondary">Loading trade history...</p>
@@ -196,7 +180,7 @@ export const Assets = () => {
               ) : (
                 <EmptyAssets />
               )}
-            </TabsContent> */}
+            </TabsContent>
           </Tabs>
         </section>
       )}
@@ -206,27 +190,13 @@ export const Assets = () => {
 
 const EmptyAssets = () => {
   const router = useRouter();
-  // const [showComingSoonModal, setShowComingSoonModal] = useState(false);
 
-  // TODO: Will be integrated in later sprint
   const handleExploreEquities = () => {
     router.push(ROUTES.explore_equities);
-    // setShowComingSoonModal(true);
   };
 
   return (
     <>
-      {/* <NoticeModal
-        show={showComingSoonModal}
-        close={() => setShowComingSoonModal(false)}
-        type="info"
-        title="Coming Soon"
-        description="This feature is coming soon"
-        action={{
-          text: "Ok",
-          action: () => setShowComingSoonModal(false),
-        }}
-      /> */}
       <div className="flex flex-col h-full items-center justify-center gap-2">
         <EmptyStateSvg />
         <p className="text-p2 text-txt-primary font-semibold">

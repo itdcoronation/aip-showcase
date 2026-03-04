@@ -35,7 +35,6 @@ const SignupUI: React.FC = () => {
       description:
         "Company or organization (like a bank, law firm, or corporation) that invests large sums on behalf of its stakeholders.",
       icon: <InstitutionSvg />,
-      isComingSoon: true,
     },
     {
       key: "joint",
@@ -43,7 +42,6 @@ const SignupUI: React.FC = () => {
       description:
         "Two individuals investing together, sharing ownership and responsibility for the investment (e.g., spouses )",
       icon: <JointSvg />,
-      isComingSoon: true,
     },
   ];
 
@@ -79,7 +77,6 @@ const SignupUI: React.FC = () => {
                 key={account.key}
                 isSelected={account.key === type}
                 onClick={() => setType(account.key)}
-                disabled={account.isComingSoon}
               />
             ))}
           </div>
@@ -118,13 +115,11 @@ interface CardData {
   title: string;
   description: string;
   icon: React.ReactNode;
-  isComingSoon?: boolean;
 }
 
 interface CardProps extends CardData {
   onClick: () => void;
   isSelected: boolean;
-  disabled?: boolean;
 }
 
 const Card = ({
@@ -133,26 +128,17 @@ const Card = ({
   icon,
   onClick,
   isSelected,
-  disabled,
 }: CardProps) => {
   return (
     <div
-      role={disabled ? undefined : "button"}
-      onClick={() => {
-        if (!disabled) onClick();
-      }}
+      role="button"
+      onClick={onClick}
       tabIndex={0}
       className={cn(
-        "relative bg-white rounded-lg p-3 border grid grid-cols-[40px_1fr_20px] gap-2",
-        isSelected ? "border-stroke-brand" : "border-stroke-primary",
-        disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+        "relative bg-white rounded-lg p-3 border grid grid-cols-[40px_1fr_20px] gap-2 cursor-pointer",
+        isSelected ? "border-stroke-brand" : "border-stroke-primary"
       )}
     >
-      {disabled ? (
-        <span className="absolute right-4 top-3 text-xs px-1.5 py-0.5 bg-bg-tertiary rounded-sm ml-auto whitespace-nowrap text-txt-primary">
-          Coming soon
-        </span>
-      ) : null}
       {icon}
       <div>
         <p className="text-p2 md:text-p1 font-semibold text-txt-primary">
@@ -160,7 +146,7 @@ const Card = ({
         </p>
         <p className="text-p4 md:text-p3 text-txt-secondary">{description} </p>
       </div>
-      {disabled ? null : isSelected ? (
+      {isSelected ? (
         <CheckCircleIcon />
       ) : (
         <span className="w-[20px] h-[20px] rounded-full border border-3 border-bg-secondary"></span>

@@ -43,14 +43,14 @@ const Overview = () => {
             isLoading={isLoading}
           />
         </div>
-        <div className="hidden w-[98px] h-[98px] relative">
+        <div className="w-[98px] h-[98px] relative">
           <DoughnutChart />
           <div className="flex flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
             <span className="text-[10px] text-txt-tertiary mb-1">Total</span>
             <span className="text-xs text-txt-primary">23</span>
           </div>
         </div>
-        <div className="hidden grid gap-3" >
+        <div className="grid gap-3" >
           <div className="flex gap-2 items-center">
             <div className="w-[10px] h-[10px] rounded-[2px] border border-0.5 border-[#8658F6] bg-[#EDEAFF]" />
             <p className="text-xs text-txt-primary"> Fixed income: 28%</p>
@@ -66,7 +66,7 @@ const Overview = () => {
         </div>
       </div>
       <CompleteOnboardingBanner />
-      <div className="hidden">
+      <div>
         <TopRecommendedStocks />
       </div>
       <Services />
