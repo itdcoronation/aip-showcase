@@ -73,6 +73,26 @@ const InvestMutualFundUI = () => {
       productId: fundCode,
     });
 
+  const investmentAccount = useMemo(() => {
+    const account = (bankDetailsData as any)?.data?.investment_account;
+
+    if (!account || typeof account !== "object") return null;
+
+    return {
+      accountName:
+        account.AccountName ?? account.accountName ?? account.account_name ?? "",
+      accountNumber:
+        account.AccountNumber ?? account.accountNumber ?? account.account_number ?? "",
+      bankName: account.BankName ?? account.bankName ?? account.bank_name ?? "",
+    };
+  }, [bankDetailsData]);
+
+  const hasInvestmentAccount =
+    !!bankDetailsData?.success &&
+    !!investmentAccount?.accountName &&
+    !!investmentAccount?.accountNumber &&
+    !!investmentAccount?.bankName;
+
   const fundName = useMemo(() => {
     return showcaseFund.name;
   }, [
@@ -100,7 +120,7 @@ const InvestMutualFundUI = () => {
   };
 
   const handleTransferQuery = async () => {
-    if (!bankDetailsData?.success) {
+    if (!hasInvestmentAccount || !investmentAccount?.accountNumber) {
       setPollingMessage("Could not retrieve account details to query.");
       return;
     }
@@ -110,7 +130,7 @@ const InvestMutualFundUI = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          vnuban: bankDetailsData.data.investment_account.AccountNumber,
+          vnuban: investmentAccount.accountNumber,
           amount: investmentAmount.replace(/,/g, ""),
         }),
       });
@@ -194,7 +214,7 @@ const stopPolling = () => {
 
 
   const initiateTransferFlow = () => {
-    if (bankDetailsData?.success) {
+    if (hasInvestmentAccount) {
       setShowTransferModal(true);
     } else {
       setInfoModalMessage("Unable to retrieve investment account details.");
@@ -255,13 +275,13 @@ const stopPolling = () => {
 
   return (
     <>
-      {bankDetailsData?.success && (
+      {hasInvestmentAccount && investmentAccount && (
         <TransferDetailsModal
           show={showTransferModal}
           close={handlePreExit}
           amount={`${currencySymbol} ${investmentAmount}`}
-          bankName={bankDetailsData.data.investment_account.BankName}
-          accountNumber={bankDetailsData.data.investment_account.AccountNumber}
+          bankName={investmentAccount.bankName}
+          accountNumber={investmentAccount.accountNumber}
           onConfirm={startPolling}
         />
       )}
@@ -317,6 +337,7 @@ const stopPolling = () => {
               amount={investmentAmount}
               currencySymbol={currencySymbol}
               bankDetails={bankDetailsData}
+              investmentAccount={investmentAccount}
               bankDetailsLoading={bankDetailsLoading}
               isPaymentPending={isPaymentPending}
               checkoutUrl={checkoutUrl}
@@ -584,6 +605,7 @@ const Step2Form = ({
   amount,
   currencySymbol,
   bankDetails,
+  investmentAccount,
   isPaymentPending,
   checkoutUrl,
   onResetCheckout,
@@ -594,6 +616,11 @@ const Step2Form = ({
   amount: string;
   currencySymbol: string;
   bankDetails: BankDetailsResponse | undefined;
+  investmentAccount: {
+    accountName: string;
+    accountNumber: string;
+    bankName: string;
+  } | null;
   bankDetailsLoading: boolean;
   isPaymentPending: boolean;
   checkoutUrl: string | null;
@@ -671,12 +698,11 @@ const Step2Form = ({
           methods={isRecurring ? cardOnlyMethod : allPaymentMethods}
           hideCardSelection={method === "card"}
           bankInfo={
-            bankDetails?.success
+            bankDetails?.success && investmentAccount
               ? {
-                  accountName: bankDetails.data.investment_account.AccountName,
-                  accountNumber:
-                    bankDetails.data.investment_account.AccountNumber,
-                  bankName: bankDetails.data.investment_account.BankName,
+                  accountName: investmentAccount.accountName,
+                  accountNumber: investmentAccount.accountNumber,
+                  bankName: investmentAccount.bankName,
                   reference: bankDetails.data.user_id || "",
                 }
               : undefined
