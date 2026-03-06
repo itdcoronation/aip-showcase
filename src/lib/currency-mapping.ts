@@ -10,7 +10,11 @@ const USD_FUND_CODES = ['CFIDFUND', 'AEP'];
  * @param fundCode - The fund code to check
  * @returns Currency symbol (₦ for NGN, $ for USD)
  */
-export const getCurrencySymbol = (fundCode: string): string => {
+export const getCurrencySymbol = (fundCode?: string | null): string => {
+  if (!fundCode) {
+    return '₦';
+  }
+
   // Check if fund code is in USD list or ends with "USD"
   if (USD_FUND_CODES.includes(fundCode) || fundCode.endsWith('USD')) {
     return '$';
@@ -24,7 +28,7 @@ export const getCurrencySymbol = (fundCode: string): string => {
  * @param fundCode - The fund code to determine currency
  * @returns Formatted currency string
  */
-export const formatCurrencyByFundCode = (value: number, fundCode: string): string => {
+export const formatCurrencyByFundCode = (value: number, fundCode?: string | null): string => {
   const symbol = getCurrencySymbol(fundCode);
   return `${symbol}${value.toLocaleString()}`;
 };
@@ -42,7 +46,11 @@ export const addUSDFundCodes = (newCodes: string[]): void => {
  * @param fundCode - The fund code to check
  * @returns Currency code (NGN or USD)
  */
-export const getCurrencyCode = (fundCode: string): 'NGN' | 'USD' => {
+export const getCurrencyCode = (fundCode?: string | null): 'NGN' | 'USD' => {
+  if (!fundCode) {
+    return 'NGN';
+  }
+
   if (USD_FUND_CODES.includes(fundCode) || fundCode.endsWith('USD')) {
     return 'USD';
   }

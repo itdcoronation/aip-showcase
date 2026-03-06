@@ -57,18 +57,20 @@ const InvestMutualFundUI = () => {
   const [pollingMessage, setPollingMessage] = useState(
     "We are confirming your payment. Please wait..."
   );
+
+  const fundCode = typeof id === "string" ? id : "";
  
   const {
    
     resetCountdown,formattedCountdown,
   } = useCountdown(300); // 5 minutes
 
-  const showcaseFund = getShowcaseMutualFund(typeof id === "string" ? id : "");
+  const showcaseFund = getShowcaseMutualFund(fundCode);
 
   // Fetch bank details for the specific product
   const { data: bankDetailsData, isLoading: bankDetailsLoading } =
     useFetchBankDetails({
-      productId: id as string,
+      productId: fundCode,
     });
 
   const fundName = useMemo(() => {
@@ -77,10 +79,10 @@ const InvestMutualFundUI = () => {
     showcaseFund,
   ]);
 
-  const currencySymbol = useMemo(() => getCurrencySymbol(id as string), [id]);
+  const currencySymbol = useMemo(() => getCurrencySymbol(fundCode), [fundCode]);
   const minimumInvestment = useMemo(
-    () => getMinimumInvestment(id as string),
-    [id]
+    () => getMinimumInvestment(fundCode),
+    [fundCode]
   );
 
 
@@ -227,13 +229,13 @@ const stopPolling = () => {
 
   const initiateCardPayment = () => {
     const amount = cleanAmount(investmentAmount);
-    const currency = getCurrencyCode(id as string);
+    const currency = getCurrencyCode(fundCode);
     
     const payloadBase = {
       amount,
       currency,
       callback_url: process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_URL || "https://wealth.coronation.ng/overview",
-      product_id: id as string,
+      product_id: fundCode,
       is_recurring: isRecurring,
     };
 
