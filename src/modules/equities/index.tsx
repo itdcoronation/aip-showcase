@@ -7,50 +7,28 @@ import { MarketClosedBanner } from "./_components/market-closed";
 import { Assets } from "./_components/assets";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/lib/routes";
-import { useFetchBrokerageBalance } from "@/requests/services/equities/balance";
-import { useFetchPortfolioFull } from "@/requests/services/portfolio/balance";
 import { useMemo } from "react";
+import { getShowcaseEquitiesTotals } from "./showcase-data";
 
 const EquitiesUI = () => {
   const router = useRouter();
-
-  // Fetch brokerage balance data
-  const { data: brokerageData, isLoading: brokerageLoading } = useFetchBrokerageBalance();
-
-  // Fetch portfolio data for investment balance
-  const { data: portfolioData, isLoading: portfolioLoading } = useFetchPortfolioFull();
+  const { brokerageBalance, currentTotal, valueChangePercentage } =
+    getShowcaseEquitiesTotals();
 
   // Format brokerage balance for display
   const brokerageAmount = useMemo(() => {
-    if (brokerageLoading) return "Loading...";
-    
-    const balance = brokerageData?.data?.Data?.wallet?.brokerage_balance;
-    if (balance !== undefined && balance !== null) {
-      return `₦ ${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-    
-    return "₦ 0.00";
-  }, [brokerageData, brokerageLoading]);
+    return `₦ ${brokerageBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }, [brokerageBalance]);
 
   // Format investment balance for display
   const investmentAmount = useMemo(() => {
-    if (portfolioLoading) return "Loading...";
-    
-    const totalCurrentValue = portfolioData?.data?.balance?.stocks?.total_current_value;
-    if (totalCurrentValue !== undefined && totalCurrentValue !== null) {
-      return `₦ ${totalCurrentValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-    
-    return "₦ 0.00";
-  }, [portfolioData, portfolioLoading]);
+    return `₦ ${currentTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }, [currentTotal]);
 
   // Get investment balance rate (value change percentage)
   const investmentRate = useMemo(() => {
-    if (portfolioLoading) return 0;
-    
-    const valueChangePercentage = portfolioData?.data?.balance?.stocks?.value_change_percentage;
-    return valueChangePercentage || 0;
-  }, [portfolioData, portfolioLoading]);
+    return valueChangePercentage;
+  }, [valueChangePercentage]);
 
   const handleFund = () => {
     router.push(ROUTES.equities_fund);

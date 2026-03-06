@@ -3,13 +3,10 @@ import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/routes";
 import { TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useFetchTopGainers } from "@/requests/services/equities/balance";
+import { showcaseStockDetails } from "../showcase-data";
 
 export const TopStockOptions = () => {
   const router = useRouter();
-  
-  // Fetch top gainers data
-  const { data: topGainersData, isLoading: topGainersLoading, error } = useFetchTopGainers();
 
   const handleExploreEquities = () => {
     router.push(ROUTES.explore_equities);
@@ -39,35 +36,16 @@ export const TopStockOptions = () => {
         </div>
 
       <div className="flex gap-4 overflow-auto w-full pb-2">
-        {topGainersLoading ? (
-          // Loading state - show skeleton cards
-          Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="min-w-[136px] p-4 bg-white shadow-sm border-0.5 border-[#EEEFF1] rounded-[16px] animate-pulse">
-              <div className="bg-gray-200 w-[40px] h-[40px] rounded-full mb-3"></div>
-              <div className="bg-gray-200 h-4 w-full mb-1 rounded"></div>
-              <div className="bg-gray-200 h-3 w-16 mb-3 rounded"></div>
-              <div className="bg-gray-200 h-4 w-20 mb-1 rounded"></div>
-              <div className="bg-gray-200 h-3 w-12 rounded"></div>
-            </div>
-          ))
-        ) : error || !topGainersData?.data?.Data ? (
-          // Error state - show fallback cards
-          Array.from({ length: 6 }).map((_, index) => (
-            <StockCard key={index} />
-          ))
-        ) : (
-          // Render actual data
-          topGainersData.data.Data.map((stock) => (
-            <StockCard
-              key={stock.id}
-              stockCode={stock.stockCode}
-              name={stock.name}
-              price={stock.price}
-              percentChange={stock.percentChange}
-              iconUrl={stock.icon_url}
-            />
-          ))
-        )}
+        {showcaseStockDetails.slice(0, 6).map((stock) => (
+          <StockCard
+            key={stock.symbol}
+            stockCode={stock.symbol}
+            name={stock.name}
+            price={stock.close}
+            percentChange={stock.changePercent}
+            iconUrl={stock.iconUrl}
+          />
+        ))}
       </div>
     </section>
     </>

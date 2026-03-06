@@ -23,7 +23,7 @@ const schema = z
         },
         { message: "Minimum amount is ₦100,000" }
       ),
-    method: z.string().min(1, "Amount is required"),
+      method: z.string().min(1, "Payment method is required"),
     card: z.string().optional(),
   })
   .refine(

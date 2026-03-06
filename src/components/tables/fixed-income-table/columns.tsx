@@ -117,7 +117,7 @@ export const getFixedIncomeColumns = ({
         },
         {
           accessorKey: "fund-type",
-          header: "Fund type",
+          header: "Type",
           cell: ({ row }) => {
             const { fund_type } = row.original as TradesFixedIncomeTableData;
             return (
@@ -219,7 +219,7 @@ export const getFixedIncomeColumns = ({
         },
         {
           accessorKey: "fund-type",
-          header: "Fund Type",
+          header: "Type",
           cell: ({ row }) => {
             const { fund_type } = row.original as RequestsFixedIncomeTableData;
             return <div>{fund_type}</div>;

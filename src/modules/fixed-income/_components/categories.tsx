@@ -2,7 +2,6 @@ import {
   bondsImg,
   cashManagementImg,
   commercialPapersImg,
-  executionImg,
   treasuryBillsImg,
 } from "@/assets/images";
 import { Button } from "@/components/ui/button";
@@ -46,31 +45,25 @@ const categories: FixedIncomeCategoryData[] = [
     title: "Bonds",
     image: bondsImg.src,
     description:
-      "Lorem ipsum dolor sit amet consectetur. Convallis platea placerat ac phasellus habitasse dictum sed viverra.",
+      "FGN and corporate bonds offering predictable coupon income across medium and long tenors.",
   },
   {
     title: "Commercial papers",
     image: commercialPapersImg.src,
     description:
-      "Lorem ipsum dolor sit amet consectetur. Convallis platea placerat ac phasellus habitasse dictum sed viverra.",
+      "Short-term corporate debt from top Nigerian issuers with competitive fixed rates.",
   },
   {
     title: "Treasury Bills",
     image: treasuryBillsImg.src,
     description:
-      "Lorem ipsum dolor sit amet consectetur. Convallis platea placerat ac phasellus habitasse dictum sed viverra.",
+      "Low-risk sovereign instruments for liquidity management and capital preservation.",
   },
   {
     title: "Cash management",
     image: cashManagementImg.src,
     description:
-      "Lorem ipsum dolor sit amet consectetur. Convallis platea placerat ac phasellus habitasse dictum sed viverra.",
-  },
-  {
-    title: "Execution only",
-    image: executionImg.src,
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Convallis platea placerat ac phasellus habitasse dictum sed viverra.",
+      "Low-volatility products for treasury cash with same-day or next-day liquidity.",
   },
 ];
 

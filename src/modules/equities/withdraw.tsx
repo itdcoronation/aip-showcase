@@ -40,7 +40,7 @@ const schema = z.object({
       },
       { message: "Minimum amount is ₦100,000" }
     ),
-  bank: z.string().min(1, "Amount is required"),
+  bank: z.string().min(1, "Bank account is required"),
 });
 
 type EquitiesWithdrawData = z.infer<typeof schema>;

@@ -11,12 +11,13 @@ import {
 import { TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mutualFundLogo } from "@/assets/images";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { NoticeModal } from "@/components/modals/notice-modal";
-import { useFetchPortfolioFull } from "@/requests/services/portfolio/balance";
-import { useFetchPendingTrades } from "@/requests/services/equities/pending-trades";
-import { useFetchHistoryTrades } from "@/requests/services/equities/history-trades";
+import {
+  showcaseEquityHistoryTableData,
+  showcaseEquityTableData,
+  showcasePendingEquityTableData,
+} from "../showcase-data";
 
 
 
@@ -26,80 +27,12 @@ export const Assets = () => {
   const router = useRouter();
   const [cancel, setCancel] = useState<string | undefined>();
   const [type, setType] = useState<"trade" | "pending" | "history">("trade");
-  
-  // Fetch portfolio data
-  const { data: portfolioData, isLoading: portfolioLoading } = useFetchPortfolioFull();
-  
-  // Fetch pending trades data
-  const { data: pendingTradesData, isLoading: pendingTradesLoading } = useFetchPendingTrades();
-  
-  // Fetch history trades data
-  const { data: historyTradesData, isLoading: historyTradesLoading } = useFetchHistoryTrades();
 
-  // Helper function to format date from API format to display format
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    return `${day} ${month}, ${year}`;
-  };
-
-  // Transform userStocks data to match EquityTableData interface
-  const transformedTradesData = useMemo((): EquityTableData[] => {
-    if (!portfolioData?.data?.Data?.userStocks) return [];
-    
-    return portfolioData.data.Data.userStocks.map((stock) => ({
-      id: stock.symbol,
-      name: stock.name,
-      short_form: stock.symbol,
-      logo: stock.icon_url,
-      purchase_price: Number(stock.buyPrice.toFixed(2)),
-      curent_price: Number(stock.currentPrice.toFixed(2)),
-      amount_invested: Number(stock.startValue.toFixed(2)),
-      current_value: Number(stock.currentValue.toFixed(2)),
-      gain_loss: stock.valueChange >= 0 
-        ? `+ ₦ ${stock.valueChange.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
-        : `- ₦ ${Math.abs(stock.valueChange).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      units_held: stock.restQuantity,
-      value_change: Number(stock.valueChangePercent.toFixed(2)),
-    }));
-  }, [portfolioData]);
-
-  // Transform pending trades data to match PendingEquityTableData interface
-  const transformedPendingTradesData = useMemo((): PendingEquityTableData[] => {
-    if (!pendingTradesData?.data?.data) return [];
-
-    return pendingTradesData.data.data.map((trade) => ({
-      id: `${trade.StockCode}-${trade.ID}`,
-      name: trade.Name,
-      short_form: trade.StockCode,
-      logo: mutualFundLogo.src,
-      txn_date: formatDate(trade.TxnDate),
-      txn_amount: Number(parseFloat(trade.QuotePrice).toFixed(2)),
-      units: Number(parseFloat(trade.Qty)),
-      txn_type: trade.TxnType.toLowerCase(),
-    }));
-  }, [pendingTradesData]);
-
-  // Transform history trades data to match EquityHistoryTableData interface
-  const transformedHistoryTradesData = useMemo((): EquityHistoryTableData[] => {
-    if (!historyTradesData?.data?.data) return [];
-
-    return historyTradesData.data.data.map((trade, index) => ({
-      id: `${trade.Symbol}-${index}`,
-      name: trade.Symbol,
-      short_form: trade.Symbol,
-      logo: mutualFundLogo.src,
-      txn_date: formatDate(trade.TradeDate),
-      txn_amount: Number(parseFloat(trade["Est. Amt"]).toFixed(2)),
-      unit_price: Number(parseFloat(trade.UnitPrice).toFixed(2)),
-      units: Number(parseFloat(trade.Qty)),
-      txn_type: trade.TxnType.toLowerCase(),
-      status: "successful",
-    }));
-  }, [historyTradesData]);
+  const transformedTradesData: EquityTableData[] = showcaseEquityTableData;
+  const transformedPendingTradesData: PendingEquityTableData[] =
+    showcasePendingEquityTableData;
+  const transformedHistoryTradesData: EquityHistoryTableData[] =
+    showcaseEquityHistoryTableData;
 
   const columns = getEquityTableColumns({
     handleView: (id) => {
@@ -149,33 +82,21 @@ export const Assets = () => {
               <TabsTrigger value="history">History</TabsTrigger>
             </TabsList>
             <TabsContent value="trade">
-              {portfolioLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <p className="text-txt-secondary">Loading trades...</p>
-                </div>
-              ) : transformedTradesData.length > 0 ? (
+              {transformedTradesData.length > 0 ? (
                 <EquitiesTable columns={columns} data={transformedTradesData} />
               ) : (
                 <EmptyAssets />
               )}
             </TabsContent>
             <TabsContent value="pending">
-              {pendingTradesLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <p className="text-txt-secondary">Loading pending trades...</p>
-                </div>
-              ) : transformedPendingTradesData.length > 0 ? (
+              {transformedPendingTradesData.length > 0 ? (
                 <EquitiesTable columns={columns} data={transformedPendingTradesData} />
               ) : (
                 <EmptyAssets />
               )}
             </TabsContent>
             <TabsContent value="history">
-              {historyTradesLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <p className="text-txt-secondary">Loading trade history...</p>
-                </div>
-              ) : transformedHistoryTradesData.length > 0 ? (
+              {transformedHistoryTradesData.length > 0 ? (
                 <EquitiesTable columns={columns} data={transformedHistoryTradesData} />
               ) : (
                 <EmptyAssets />

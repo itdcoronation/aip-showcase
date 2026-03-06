@@ -22,8 +22,6 @@ import { CopySimpleIcon } from "@/assets/vectors/icons";
 import { SelectInput } from "@/components/form/select-input";
 import { DatePicker } from "@/components/form/date-picker";
 import { frequencyOptions } from "@/lib/constants";
-import { useFetchFundDetails } from "@/requests/services/products";
-import { useFetchPortfolioFull } from "@/requests/services/portfolio/balance";
 import { getCurrencySymbol, getCurrencyCode } from "@/lib/currency-mapping";
 import { getMinimumInvestment } from "@/lib/fund-minimums";
 import { useFetchBankDetails } from "@/requests/services/mutual-funds/bank-details";
@@ -31,6 +29,7 @@ import { BankDetailsResponse } from "@/types/bank-info";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { useInitiatePayment } from "@/requests/services/payments/initiate";
 import { cleanAmount, formatDateForAPI, transformFrequency } from "@/lib/payment-utils";
+import { getShowcaseMutualFund } from "./showcase-data";
 
 const InvestMutualFundUI = () => {
   const [step, setStep] = useState(1);
@@ -64,14 +63,7 @@ const InvestMutualFundUI = () => {
     resetCountdown,formattedCountdown,
   } = useCountdown(300); // 5 minutes
 
-  // Fetch fund details and portfolio data to get fund name
-  const { data: fundDetailsData, isLoading: fundDetailsLoading } =
-    useFetchFundDetails({
-      params: { fund_filter: id as string },
-    });
-
-  const { data: portfolioData, isLoading: portfolioLoading } =
-    useFetchPortfolioFull();
+  const showcaseFund = getShowcaseMutualFund(typeof id === "string" ? id : "");
 
   // Fetch bank details for the specific product
   const { data: bankDetailsData, isLoading: bankDetailsLoading } =
@@ -80,20 +72,9 @@ const InvestMutualFundUI = () => {
     });
 
   const fundName = useMemo(() => {
-    if (fundDetailsLoading || portfolioLoading) return "Loading...";
-    const fundDetailsName = fundDetailsData?.Data?.[0]?.fundName;
-    if (fundDetailsName) return fundDetailsName;
-    const portfolioFund = portfolioData?.data?.Data?.userFunds?.find(
-      (fund) => fund.productCode === id
-    );
-    if (portfolioFund) return portfolioFund.productName;
-    return "Fund";
+    return showcaseFund.name;
   }, [
-    fundDetailsData,
-    portfolioData,
-    id,
-    fundDetailsLoading,
-    portfolioLoading,
+    showcaseFund,
   ]);
 
   const currencySymbol = useMemo(() => getCurrencySymbol(id as string), [id]);

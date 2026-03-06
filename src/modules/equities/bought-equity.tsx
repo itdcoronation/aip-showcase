@@ -7,47 +7,13 @@ import { mutualFundLogo, newsImg } from "@/assets/images";
 import { ArrowElbowRightIcon } from "@/assets/vectors/icons";
 import { Collapsible } from "@/components/collapsible";
 import { CustomAreaChart } from "@/components/charts/area-chart";
-import { useStockDetails } from "@/requests/services/equities/stock-details";
-import { useFetchPortfolioFull } from "@/requests/services/portfolio/balance";
-import { useMemo } from "react";
+import { getShowcaseOwnedStock, getShowcaseStockDetail } from "./showcase-data";
 
 const BoughtEquityUI = () => {
   const router = useRouter();
   const { id } = useParams();
-
-  const { data: stockDetailsData, isLoading: stockDetailsLoading, error: stockDetailsError } = useStockDetails({
-    symbol: id as string
-  });
-
-  const { data: portfolioData, isLoading: portfolioLoading, error: portfolioError } = useFetchPortfolioFull();
-
-  const stockData = useMemo(() => {
-    return stockDetailsData?.data?.Data?.[0] || null;
-  }, [stockDetailsData]);
-
-  const userStockData = useMemo(() => {
-    if (!portfolioData?.data?.Data?.userStocks || !id) return null;
-    return portfolioData.data.Data.userStocks.find(stock => stock.symbol === id);
-  }, [portfolioData, id]);
-
-  const isLoading = stockDetailsLoading || portfolioLoading;
-  const hasError = stockDetailsError || portfolioError;
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-txt-secondary">Loading stock details...</p>
-      </div>
-    );
-  }
-
-  if (hasError || !stockData || !userStockData) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-txt-error">Failed to load stock details or portfolio data</p>
-      </div>
-    );
-  }
+  const stockData = getShowcaseStockDetail(typeof id === "string" ? id : "");
+  const userStockData = getShowcaseOwnedStock(typeof id === "string" ? id : "");
 
   const handleBuyMore = () => {
     router.push(`/equities/${id}/buy`);
@@ -189,13 +155,7 @@ const BoughtEquityUI = () => {
           title={`About ${userStockData.name || stockData.name}`}
           body={
             <p className="text-p4 text-txt-secondary max-w-[760px]">
-              Lorem ipsum dolor sit amet consectetur. Ultrices mattis
-              suscipit facilisis scelerisque. Lacus donec neque lacus eget
-              id cursus feugiat eget est. Aliquam consequat eu quam placerat
-              consectetur elit vel faucibus bibendum. Lobortis nunc pretium
-              facilisi nisl duis eu velit. Nunc dolor urna semper et
-              molestie sit diam. Vitae nisi tempus eget volutpat sed lacus.
-              Mollis consectetur est enim enim feugiat.
+              {stockData.about}
             </p>
           }
         />

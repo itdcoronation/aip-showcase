@@ -9,11 +9,12 @@ import { Label } from "@/components/ui/label";
 import { fundWithdrawalReasonOptions } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Plus, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
+import { resolveShowcaseFixedIncomeName } from "@/lib/showcase-display-names";
 
 const banks: BankAccountData[] = [
   {
@@ -53,6 +54,11 @@ const WithdrawFixedIncomeUI = () => {
   const [show, setShow] = useState(false);
   const [bank, setBank] = useState("");
   const router = useRouter();
+  const { id } = useParams();
+
+  const fundName = resolveShowcaseFixedIncomeName(
+    typeof id === "string" ? id : undefined
+  );
 
   const {
     handleSubmit,
@@ -108,7 +114,7 @@ const WithdrawFixedIncomeUI = () => {
       <section className="mx-auto max-w-[940px] mt-8">
         <div className="mb-4">
           <h2 className="text-h4 sm:text-h3 font-semibold text-txt-primary mb-1">
-            Withdraw [fundName]
+            Withdraw {fundName}
           </h2>
           <p className="text-p4 sm:text-p3 text-txt-tertiary">
             Please enter the amount of you would like to Withdraw

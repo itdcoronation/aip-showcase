@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { sellOrderTypeOptions } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { NoticeModal } from "@/components/modals/notice-modal";
 import { OtpModal } from "@/components/modals/otp-modal";
 import { Notice } from "@/components/notice";
+import { resolveShowcaseStockName } from "@/lib/showcase-display-names";
 
 const formSchema = z
   .object({
@@ -50,6 +51,10 @@ export const SellStockUI = () => {
   const [show, setShow] = useState(false);
 
   const router = useRouter();
+  const { id } = useParams();
+  const stockName = resolveShowcaseStockName(
+    typeof id === "string" ? id : undefined
+  );
 
   const {
     handleSubmit,
@@ -104,7 +109,7 @@ export const SellStockUI = () => {
       <section className="mx-auto max-w-[940px] mt-8">
         <div className="mb-4">
           <h2 className="text-h4 sm:text-h3 font-semibold text-txt-primary mb-1">
-            Sell [stockName]
+            Sell {stockName}
           </h2>
           <p className="text-p4 sm:text-p3 text-txt-tertiary">
             Please enter the amount of stock you want to sell.

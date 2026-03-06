@@ -8,42 +8,18 @@ import { ArrowElbowRightIcon } from "@/assets/vectors/icons";
 import { Collapsible } from "@/components/collapsible";
 import { CustomAreaChart } from "@/components/charts/area-chart";
 import { BoughtEquityUI } from "./bought-equity";
-import { useStockDetails } from "@/requests/services/equities/stock-details";
-import { useMemo } from "react";
+import { getShowcaseStockDetail } from "./showcase-data";
 
 export const EquityUI = () => {
   const router = useRouter();
   const { id } = useParams();
   const searchParams = useSearchParams();
   const bought = searchParams.get("bought");
-
-  const { data: stockDetailsData, isLoading: stockDetailsLoading, error: stockDetailsError } = useStockDetails({
-    symbol: id as string
-  });
-
-  const stockData = useMemo(() => {
-    return stockDetailsData?.data?.Data?.[0] || null;
-  }, [stockDetailsData]);
+  const stockData = getShowcaseStockDetail(typeof id === "string" ? id : "");
 
   // If user owns the equity, render the bought equity component
   if (bought) {
     return <BoughtEquityUI />;
-  }
-
-  if (stockDetailsLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-txt-secondary">Loading stock details...</p>
-      </div>
-    );
-  }
-
-  if (stockDetailsError || !stockData) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-txt-error">Failed to load stock details</p>
-      </div>
-    );
   }
 
   const handleBuyStock = () => {
@@ -104,13 +80,7 @@ export const EquityUI = () => {
           title={`About ${stockData.name}`}
           body={
             <p className="text-p4 text-txt-secondary max-w-[760px]">
-              Lorem ipsum dolor sit amet consectetur. Ultrices mattis
-              suscipit facilisis scelerisque. Lacus donec neque lacus eget
-              id cursus feugiat eget est. Aliquam consequat eu quam placerat
-              consectetur elit vel faucibus bibendum. Lobortis nunc pretium
-              facilisi nisl duis eu velit. Nunc dolor urna semper et
-              molestie sit diam. Vitae nisi tempus eget volutpat sed lacus.
-              Mollis consectetur est enim enim feugiat.
+              {stockData.about}
             </p>
           }
         />
