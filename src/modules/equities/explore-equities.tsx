@@ -5,50 +5,65 @@ import { StockCardSkeleton } from "@/components/ui/stock-card-skeleton";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useStockExploration } from "@/requests/services/equities/explore";
-import { useEffect, useCallback, useRef } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { showcaseStockDetails } from "./showcase-data";
 
 export const ExploreEquitiesUI = () => {
   const router = useRouter();
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-  
-  const {
-    stocks,
-    availableSectors,
-    paginationInfo,
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    error,
-    searchTerm,
-    selectedSector,
-    sortBy,
-    sortOrder,
-    setSearchTerm,
-    setSelectedSector,
-    setSortBy,
-    setSortOrder,
-    loadMore,
-    resetFilters,
-  } = useStockExploration();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSector, setSelectedSector] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  // Intersection Observer for infinite scroll
-  useEffect(() => {
-    if (!loadMoreRef.current) return;
+  const availableSectors = useMemo(
+    () => Array.from(new Set(showcaseStockDetails.map((stock) => stock.sector))),
+    []
+  );
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          loadMore();
-        }
-      },
-      { threshold: 0.1 }
-    );
+  const stocks = useMemo(() => {
+    const filtered = showcaseStockDetails.filter((stock) => {
+      const matchesSearch =
+        !searchTerm ||
+        stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stock.symbol.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSector = !selectedSector || stock.sector === selectedSector;
+      return matchesSearch && matchesSector;
+    });
 
-    observer.observe(loadMoreRef.current);
+    if (!sortBy) return filtered;
 
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, loadMore]);
+    const sorted = [...filtered].sort((a, b) => {
+      const dir = sortOrder === "asc" ? 1 : -1;
+
+      if (sortBy === "name") return a.name.localeCompare(b.name) * dir;
+      if (sortBy === "symbol") return a.symbol.localeCompare(b.symbol) * dir;
+      if (sortBy === "price") return (Number(a.close) - Number(b.close)) * dir;
+      if (sortBy === "change") {
+        return (Number(a.changePercent) - Number(b.changePercent)) * dir;
+      }
+      if (sortBy === "volume") return (Number(a.volume) - Number(b.volume)) * dir;
+
+      return 0;
+    });
+
+    return sorted;
+  }, [searchTerm, selectedSector, sortBy, sortOrder]);
+
+  const paginationInfo = {
+    totalItems: showcaseStockDetails.length,
+  };
+
+  const isLoading = false;
+  const isFetchingNextPage = false;
+  const hasNextPage = false;
+  const error = null;
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setSelectedSector("");
+    setSortBy("");
+    setSortOrder("asc");
+  };
 
   // Handle sort change
   const handleSortChange = useCallback((newSortBy: string) => {
@@ -203,9 +218,6 @@ export const ExploreEquitiesUI = () => {
           {isLoading && renderSkeletonCards(24)}
         </div>
 
-        {/* Load more trigger for infinite scroll */}
-        <div ref={loadMoreRef} className="h-10 w-full" />
-
         {/* No results message */}
         {!isLoading && stocks.length === 0 && !error && (
           <div className="text-center py-12">
@@ -222,14 +234,6 @@ export const ExploreEquitiesUI = () => {
           </div>
         )}
 
-        {/* End of results message */}
-        {!hasNextPage && stocks.length > 0 && (
-          <div className="text-center py-8">
-            <p className="text-txt-secondary text-sm">
-              You&apos;ve reached the end of the results
-            </p>
-          </div>
-        )}
       </section>
     </>
   );

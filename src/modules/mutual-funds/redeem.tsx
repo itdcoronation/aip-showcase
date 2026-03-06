@@ -12,8 +12,6 @@ import { useState, useMemo, useEffect } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
-import { useFetchFundDetails } from "@/requests/services/products";
-import { useFetchPortfolioFull } from "@/requests/services/portfolio/balance";
 import {
   useRedeemFund,
   generateRedeemReference,
@@ -21,6 +19,7 @@ import {
 import { sanitizeError, generateErrorId } from "@/lib/error-sanitization";
 import { checkRedeemAvailability } from "@/lib/fund-restrictions";
 import { useModalContext } from "@/context/modal-context";
+import { getShowcaseMutualFund } from "./showcase-data";
 
 const formSchema = z.object({
   reason: z.string().min(1, "Select a reason"),
@@ -61,37 +60,13 @@ const RedeemMutualFundsUI = () => {
 
   const router = useRouter();
   const { id } = useParams();
-
-  // Fetch fund details and portfolio data to get fund name
-  const { data: fundDetailsData, isLoading: fundDetailsLoading } =
-    useFetchFundDetails({
-      params: { fund_filter: id as string },
-    });
-
-  const { data: portfolioData, isLoading: portfolioLoading } =
-    useFetchPortfolioFull();
+  const showcaseFund = getShowcaseMutualFund(typeof id === "string" ? id : "");
 
   // Get fund name from fund details or portfolio data
   const fundName = useMemo(() => {
-    if (fundDetailsLoading || portfolioLoading) return "Loading...";
-
-    // Try to get from fund details first
-    const fundDetailsName = fundDetailsData?.Data?.[0]?.fundName;
-    if (fundDetailsName) return fundDetailsName;
-
-    // Fallback to portfolio data
-    const portfolioFund = portfolioData?.data?.Data?.userFunds?.find(
-      (fund) => fund.productCode === id
-    );
-    if (portfolioFund) return portfolioFund.productName;
-
-    return "Fund";
+    return showcaseFund.name;
   }, [
-    fundDetailsData,
-    portfolioData,
-    id,
-    fundDetailsLoading,
-    portfolioLoading,
+    showcaseFund,
   ]);
 
   // Check fund restrictions

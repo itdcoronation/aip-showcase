@@ -1,26 +1,25 @@
 "use client";
 import { MutualFundCard } from "@/components/cards/mutual-fund-card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useFetchFactSheet } from "@/requests/services/products/fact-sheet";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { showcaseMutualFundCards } from "../showcase-data";
 
 export const MutualFunds = () => {
   const [page, setPage] = useState(1);
-
-  const { data, isPending } = useFetchFactSheet({
-    params: { page, per_page: 4 },
-  });
+  const perPage = 4;
+  const totalPages = Math.max(1, Math.ceil(showcaseMutualFundCards.length / perPage));
+  const start = (page - 1) * perPage;
+  const pagedData = showcaseMutualFundCards.slice(start, start + perPage);
 
   const handlePrev = () => {
-    if (page > 1 && data && data.pagination.has_previous_page) {
+    if (page > 1) {
       setPage((prev) => prev - 1);
     }
   };
 
   const handleNext = () => {
-    if (data && data.pagination.has_next_page) {
+    if (page < totalPages) {
       setPage((prev) => prev + 1);
     }
   };
@@ -38,7 +37,7 @@ export const MutualFunds = () => {
         </div>
         <div className="flex gap-2">
           <Button
-            disabled={!data?.pagination.has_previous_page}
+            disabled={page <= 1}
             onClick={handlePrev}
             size={"icon"}
             variant={"outline"}
@@ -47,8 +46,7 @@ export const MutualFunds = () => {
             <ChevronLeft size={18} className="!w-[18px] !h-[18px]" />
           </Button>
           <Button
-            // disabled={data ? data.data.Data.length < 4 : true}
-            disabled={!data?.pagination.has_next_page}
+            disabled={page >= totalPages}
             onClick={handleNext}
             size={"icon"}
             variant={"outline"}
@@ -60,24 +58,15 @@ export const MutualFunds = () => {
       </div>
 
       <div className="flex gap-4 overflow-auto w-full pb-2">
-        {isPending ? (
-          <>
-            <Skeleton className="h-[144px] min-w-[250px] rounded-xl" />
-            <Skeleton className="h-[144px] min-w-[250px] rounded-xl" />
-            <Skeleton className="h-[144px] min-w-[250px] rounded-xl" />
-            <Skeleton className="h-[144px] min-w-[250px] rounded-xl" />
-          </>
-        ) : (
-          data?.Data.map((item) => (
-            <MutualFundCard
-              key={item.fundCode}
-              title={item.fundName}
-              riskProfile={item.riskProfile}
-              estimatedYield={item.yield}
-              id={item.fundCode}
-            />
-          ))
-        )}
+        {pagedData.map((item) => (
+          <MutualFundCard
+            key={item.id}
+            title={item.title}
+            riskProfile={item.riskProfile}
+            estimatedYield={item.estimatedYield}
+            id={item.id}
+          />
+        ))}
       </div>
     </section>
   );

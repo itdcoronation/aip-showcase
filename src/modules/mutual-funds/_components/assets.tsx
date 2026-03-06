@@ -5,54 +5,27 @@ import {
   FundHistoryTableData,
   PendingFundTableData,
 } from "@/types/mutual-fund";
-import { PortfolioFullResponse, UserFund } from "@/types/portfolio";
 import { useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MutualFundsTable } from "@/components/tables/mutual-funds-table";
-import { mutualFundLogo } from "@/assets/images";
 import { NoticeModal } from "@/components/modals/notice-modal";
+import {
+  showcaseCompletedFundData,
+  showcasePendingFundData,
+  showcaseFundHistoryData,
+} from "../showcase-data";
 
-interface AssetsProps {
-  portfolioData?: PortfolioFullResponse;
-}
-
-// Utility function to transform API data to table format
-const transformUserFundsToTableData = (userFunds: UserFund[]): CompletedFundTableData[] => {
-  return userFunds.map((fund, index) => ({
-    id: fund.productCode || `fund-${index}`,
-    name: fund.productName,
-    short_form: fund.productCode,
-    logo: mutualFundLogo.src,
-    est_yield: 0, // Not available in API response
-    amount_invested: 0, // Not available in API response - would need historical data
-    txn_date: new Date(fund.valuationDate).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short', 
-      year: 'numeric'
-    }),
-    current_value: parseFloat(fund.totalAssetValue.toFixed(2)),
-    value_change: 0, // Would need historical data to calculate
-  }));
-};
-
-const Assets = ({ portfolioData }: AssetsProps) => {
+const Assets = () => {
   const router = useRouter();
   const [cancel, setCancel] = useState<string | undefined>();
   const [redeemRestrictionMessage, setRedeemRestrictionMessage] = useState<string | undefined>();
   const [type, setType] = useState<"active" | "pending" | "history">(
     "active"
   );
-
-  // Transform API data to table format
-  const completedFundData = useMemo(() => {
-    if (!portfolioData?.data?.Data?.userFunds) return [];
-    return transformUserFundsToTableData(portfolioData.data.Data.userFunds);
-  }, [portfolioData]);
-
-  // Static data for pending and history (to be replaced when those APIs are available)
-  const pendingFundData: PendingFundTableData[] = [];
-  const fundHistoryData: FundHistoryTableData[] = [];
+  const completedFundData: CompletedFundTableData[] = showcaseCompletedFundData;
+  const pendingFundData: PendingFundTableData[] = showcasePendingFundData;
+  const fundHistoryData: FundHistoryTableData[] = showcaseFundHistoryData;
 
   const columns = getMutualFundTableColumns({
     handleView: (id) => router.push(`/mutual-funds/${id}?bought=true`),

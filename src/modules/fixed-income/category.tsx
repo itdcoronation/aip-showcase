@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronDown, Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,45 +9,52 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { FixedIncomeCard2 } from "@/components/cards/fixed-income-card";
-
-const categories = [
-  {
-    label: "Bonds",
-    value: "bonds",
-  },
-  {
-    label: "Commercial papers",
-    value: "commercial-papers",
-  },
-  {
-    label: "Treasury Bills",
-    value: "treasury-bills",
-  },
-  {
-    label: "Cash management",
-    value: "cash-management",
-  },
-  {
-    label: "Execution only",
-    value: "execution",
-  },
-];
+import {
+  fixedIncomeCategoryOptions,
+  fixedIncomeCategoryProducts,
+  FixedIncomeCategoryValue,
+} from "./showcase-data";
+import Image from "next/image";
+import Link from "next/link";
 
 const FixedIncomeCategoryUI = () => {
-  const [category, setCategory] = useState<string | undefined>();
+  const [category, setCategory] = useState<FixedIncomeCategoryValue>("bonds");
+  const [search, setSearch] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const initCategory = searchParams.get("category");
-  console.log(initCategory, "initCategory");
+
   useEffect(() => {
-    if (initCategory)
-      setCategory(
-        categories.find((item) => item.label === initCategory)?.value
-      );
+    if (!initCategory) return;
+
+    const normalized = initCategory.trim().toLowerCase();
+    const matchedCategory = fixedIncomeCategoryOptions.find(
+      (item) => item.label.toLowerCase() === normalized
+    );
+
+    if (matchedCategory) {
+      setCategory(matchedCategory.value);
+    }
   }, [initCategory]);
 
-  const selectedCategory = categories.find((item) => item.value === category);
+  const selectedCategory = fixedIncomeCategoryOptions.find(
+    (item) => item.value === category
+  );
+
+  const filteredProducts = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    return fixedIncomeCategoryProducts.filter((item) => {
+      if (item.category !== category) return false;
+      if (!normalizedSearch) return true;
+
+      return (
+        item.name.toLowerCase().includes(normalizedSearch) ||
+        item.short_form.toLowerCase().includes(normalizedSearch) ||
+        item.issuer.toLowerCase().includes(normalizedSearch)
+      );
+    });
+  }, [category, search]);
 
   return (
     <>
@@ -66,10 +73,10 @@ const FixedIncomeCategoryUI = () => {
               <ChevronDown strokeWidth={1} />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="px-2 py-2 grid gap-2">
-              {categories.map((item) => (
+              {fixedIncomeCategoryOptions.map((item) => (
                 <DropdownMenuItem
                   key={item.value}
-                  onClick={() => setCategory(item.value)}
+                  onClick={() => setCategory(item.value as FixedIncomeCategoryValue)}
                   className={
                     item.value === category
                       ? "bg-bg-secondary text-txt-primary font-semibold"
@@ -88,16 +95,55 @@ const FixedIncomeCategoryUI = () => {
         <div className="bg-white rounded border border-stroke-primary rounded-[10px] flex">
           <Search color="#56575D" size={18} className="ml-3 mt-3" />
           <Input
-            placeholder="Search by name or symbol,e.g. Access bank"
+            placeholder="Search by instrument or issuer, e.g. FGN Bond"
             parentClassName="w-full"
             className="border-none"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
           />
         </div>
+        <p className="text-xs text-txt-secondary">{selectedCategory?.description}</p>
         <div className="grid gap-4 mt-4">
-          <FixedIncomeCard2 />
-          <FixedIncomeCard2 />
-          <FixedIncomeCard2 />
-          <FixedIncomeCard2 />
+          {filteredProducts.map((item) => (
+            <Link
+              key={`${item.category}-${item.id}`}
+              href={`/fixed-income/${item.id}`}
+              className="shadow-sm p-4 bg-white border-0.5 border-[#EEEFF1] rounded-[24px]"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex gap-2 items-center">
+                  <Image src={item.logo} alt="" width={32} height={32} />
+                  <div>
+                    <p className="text-txt-primary">{item.name}</p>
+                    <p className="text-l2 text-txt-secondary text-[11px]">{item.issuer}</p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-txt-secondary mb-3">{item.shortDescription}</p>
+
+              <div className="flex items-center justify-between border-0.5 border-t border-[#EFEFF0] pt-2">
+                <div>
+                  <p className="text-[11px] text-txt-secondary mb-0.5">Rate</p>
+                  <p className="text-p4 text-txt-success-dark font-semibold">{item.rate}%</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-txt-secondary mb-0.5">Tenure</p>
+                  <p className="text-p4 text-txt-primary">{item.tenure}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-txt-secondary mb-0.5">Type</p>
+                  <p className="text-p4 text-txt-primary">{item.type}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+
+          {filteredProducts.length === 0 ? (
+            <div className="bg-white rounded-[12px] border border-stroke-primary p-4 text-sm text-txt-secondary">
+              No products found for this category.
+            </div>
+          ) : null}
         </div>
       </section>
     </>

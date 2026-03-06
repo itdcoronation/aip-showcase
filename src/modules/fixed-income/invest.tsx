@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,11 +8,18 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import CurrencyInput from "react-currency-input-field";
 import { Notice } from "@/components/notice";
 import { NoticeModal } from "@/components/modals/notice-modal";
+import { resolveShowcaseFixedIncomeName } from "@/lib/showcase-display-names";
+
+const FIXED_INCOME_MINIMUM_INVESTMENT = 5000000;
 
 const InvestFixedIncomeUI = () => {
   const [show, setShow] = useState(false);
   // const [step, setStep] = useState(1);
   const router = useRouter();
+  const { id } = useParams();
+  const fundName = resolveShowcaseFixedIncomeName(
+    typeof id === "string" ? id : undefined
+  );
 
   return (
     <>
@@ -40,7 +47,7 @@ const InvestFixedIncomeUI = () => {
         <section className="grid gap-8">
           <div className="">
             <h2 className="text-h4 sm:text-h3 font-semibold text-txt-primary mb-1">
-              Invest [fundName]
+              Invest {fundName}
             </h2>
             <p className="text-p4 sm:text-p3 text-txt-tertiary">
               Please enter the amount of you would like to invest
@@ -62,7 +69,7 @@ const step1FormSchema = z.object({
       (val) => {
         // Remove commas and parse to number
         const num = Number(val.replace(/,/g, ""));
-        return !isNaN(num) && num >= 50000000;
+        return !isNaN(num) && num >= FIXED_INCOME_MINIMUM_INVESTMENT;
       },
       { message: "This amount doesn’t meet the minimum investment requirement" }
     ),
@@ -106,7 +113,7 @@ const Step1Form = ({ handleNext }: { handleNext: () => void }) => {
             <p className="text-xs sm:text-sm text-txt-secondary">
               Minimum investment amount:{""}
               <span className="font-semibold text-txt-primary">
-                ₦ 5,000,000.00
+                ₦ {FIXED_INCOME_MINIMUM_INVESTMENT.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
             </p>
           </div>
