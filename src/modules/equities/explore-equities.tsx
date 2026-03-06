@@ -195,7 +195,7 @@ export const ExploreEquitiesUI = () => {
           {/* Render actual stock cards */}
           {stocks.map((stock) => (
             <StockCard
-              key={stock.id}
+              key={stock.symbol}
               stockCode={stock.symbol}
               name={stock.name}
               price={stock.close}
