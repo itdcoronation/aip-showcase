@@ -90,7 +90,7 @@ export const SellStockUI = () => {
       <NoticeModal
         show={show}
         close={() => setShow(false)}
-        description="Please note that this message is not a confirmation of trade execution. Trade execution is dependent on prevailing market activity and is subject to a settlement timeline of T+3 working days. Kindly check your email for the details of your transaction."
+        description="Please note that this message is not a confirmation of trade execution. Trade execution is dependent on prevailing market activity and is subject to a settlement timeline of T+2 working days. Kindly check your email for the details of your transaction."
         title="Successful! 🎉"
         action={{
           text: (
