@@ -2,13 +2,11 @@ const FIXED_INCOME_NAME_BY_ID: Record<string, string> = {
   "1": "Dangote Cement Plc Commercial Paper Series 10",
   "2": "FGN Savings Bond Mar 2027",
   "3": "182-Day Nigerian Treasury Bill",
-  "4": "Coronation Cash Management Portfolio",
   "5": "MTN Nigeria Commercial Paper Series 7",
   "6": "FGN Sovereign Sukuk 2031",
   "7": "Access Holdings Bond 2028",
   "8": "Flour Mills CP Series 4",
   "9": "364-Day Nigerian Treasury Bill",
-  "10": "United Capital Cash Management Product",
   "123": "Federal Government Treasury Bill 2025",
 };
 

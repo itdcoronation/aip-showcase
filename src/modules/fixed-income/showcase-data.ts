@@ -8,8 +8,7 @@ import {
 export type FixedIncomeCategoryValue =
   | "bonds"
   | "commercial-papers"
-  | "treasury-bills"
-  | "cash-management";
+  | "treasury-bills";
 
 export interface FixedIncomeCategoryOption {
   label: string;
@@ -23,7 +22,7 @@ export interface FixedIncomeCategoryProduct {
   short_form: string;
   logo: string;
   category: FixedIncomeCategoryValue;
-  type: "Bonds" | "Commercial Papers" | "Treasury bills" | "Cash management";
+  type: "Bonds" | "Commercial Papers" | "Treasury bills";
   issuer: string;
   rate: number;
   tenure: string;
@@ -66,18 +65,6 @@ export const fixedIncomeTradesData: TradesFixedIncomeTableData[] = [
     current_value: 16050000,
     value_change: 7,
     fund_type: "Treasury bills",
-  },
-  {
-    id: "4",
-    name: "Coronation Cash Management Portfolio",
-    short_form: "CCMP",
-    logo: mutualFundLogo.src,
-    rate: 14.1,
-    amount_invested: 5000000,
-    txn_date: "12 Jun, 2025",
-    current_value: 5175000,
-    value_change: 3.5,
-    fund_type: "Cash management",
   },
   {
     id: "5",
@@ -129,18 +116,6 @@ export const fixedIncomeRequestData: RequestsFixedIncomeTableData[] = [
     txn_type: "redeem",
     tenure: "364 days",
     fund_type: "Treasury bills",
-  },
-  {
-    id: "4",
-    name: "United Capital Cash Management Product",
-    short_form: "UCCMP",
-    logo: mutualFundLogo.src,
-    txn_date: "12 Jun, 2025",
-    txn_amount: 2500000,
-    rate: 13.6,
-    txn_type: "invest",
-    tenure: "Open-ended",
-    fund_type: "Cash management",
   },
   {
     id: "5",
@@ -232,12 +207,6 @@ export const fixedIncomeCategoryOptions: FixedIncomeCategoryOption[] = [
     value: "treasury-bills",
     description:
       "Federal Government short-dated instruments focused on capital preservation and liquidity.",
-  },
-  {
-    label: "Cash management",
-    value: "cash-management",
-    description:
-      "Low-volatility liquidity products for idle cash and near-term funding needs.",
   },
 ];
 
@@ -337,29 +306,5 @@ export const fixedIncomeCategoryProducts: FixedIncomeCategoryProduct[] = [
     rate: 22.1,
     tenure: "364 days",
     shortDescription: "Longer tenor T-bill for investors targeting higher annualized yield.",
-  },
-  {
-    id: "4",
-    name: "Coronation Cash Management Portfolio",
-    short_form: "CCMP",
-    logo: mutualFundLogo.src,
-    category: "cash-management",
-    type: "Cash management",
-    issuer: "Coronation Asset Management",
-    rate: 14.1,
-    tenure: "Open-ended",
-    shortDescription: "Daily liquidity portfolio designed for treasury and operating cash.",
-  },
-  {
-    id: "10",
-    name: "United Capital Cash Management Product",
-    short_form: "UCCMP",
-    logo: mutualFundLogo.src,
-    category: "cash-management",
-    type: "Cash management",
-    issuer: "United Capital Asset Management",
-    rate: 13.6,
-    tenure: "Open-ended",
-    shortDescription: "Low-volatility money-market allocation with same-day liquidity.",
   },
 ];

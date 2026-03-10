@@ -12,12 +12,19 @@ import CurrencyInput from "react-currency-input-field";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { NoticeModal } from "@/components/modals/notice-modal";
+import { getShowcaseStockDetail } from "./showcase-data";
 
 const formSchema = z
   .object({
     order_type: z.string().min(1, "Select an order type"),
     order_limit: z.string().optional(),
-    amount: z.string().min(1, "Amount is required"),
+    amount: z
+      .string()
+      .min(1, "Units are required")
+      .refine((val) => {
+        const units = Number(val.replace(/,/g, ""));
+        return Number.isInteger(units) && units > 0;
+      }, "Only whole number units are allowed"),
     cancel_today: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
@@ -39,6 +46,8 @@ export const BuyStockUI = () => {
   const router = useRouter();
   const { id } = useParams();
   const stockName = typeof id === "string" ? id.toUpperCase() : "STOCK";
+  const stockData = getShowcaseStockDetail(typeof id === "string" ? id : "");
+  const pricePerShare = Number(stockData?.close || 0);
 
   const {
     handleSubmit,
@@ -88,7 +97,7 @@ export const BuyStockUI = () => {
             Purchase {stockName}
           </h2>
           <p className="text-p4 sm:text-p3 text-txt-tertiary">
-            Please enter the amount of stock you want to buy.
+            Please enter the units of stock you want to buy.
           </p>
         </div>
 
@@ -137,20 +146,18 @@ export const BuyStockUI = () => {
           <div className="mb-4">
             <div className="flex-col sm:flex-row flex gap-4 sm:items-center justify-between border border-stroke-secondary bg-bg-secondary px-4 py-4 sm:py-6 rounded-[12px]">
               <div className="">
-                <p className="text-txt-secondary mb-2">Amount to buy</p>
-                <div className="flex gap-2">
-                  <p className="text-h2 text-txt-tertiary items-center">₦</p>
-                  <div className="w-[90%]">
-                    <CurrencyInput
-                      {...register("amount", {
-                        required: true,
-                      })}
-                      decimalsLimit={2}
-                      className="text-h2"
-                      placeholder="0.00"
-                      style={{ width: "100%" }}
-                    />
-                  </div>
+                <p className="text-txt-secondary mb-2">Units to buy</p>
+                <div className="w-[90%]">
+                  <CurrencyInput
+                    {...register("amount", {
+                      required: true,
+                    })}
+                    allowDecimals={false}
+                    decimalsLimit={0}
+                    className="text-h2"
+                    placeholder="0"
+                    style={{ width: "100%" }}
+                  />
                 </div>
               </div>
               <div className="flex flex-col items-start sm:items-end">
@@ -159,6 +166,7 @@ export const BuyStockUI = () => {
                   <span className="font-semibold text-txt-primary">₦ 0.00</span>{" "}
                 </p>
                 <Button
+                  type="button"
                   variant={"outline"}
                   size="m"
                   className="bg-white w-full sm:w-fit"
@@ -191,7 +199,9 @@ export const BuyStockUI = () => {
               <Label>Cancel my order if it is not executed today</Label>
             </div>
           ) : null}
-          {breakdown ? <StockBreakdown /> : null}
+          {breakdown ? (
+            <StockBreakdown amount={watch("amount")} pricePerShare={pricePerShare} />
+          ) : null}
           <Button
             disabled={!isValid}
             onClick={handleSubmit(onSubmit)}
@@ -210,20 +220,31 @@ export const BuyStockUI = () => {
   );
 };
 
-const StockBreakdown = () => {
+const StockBreakdown = ({
+  amount,
+  pricePerShare,
+}: {
+  amount?: string;
+  pricePerShare: number;
+}) => {
+  const units = Number((amount || "0").replace(/,/g, ""));
+  const estimatedTradeValue = units * pricePerShare;
+  const feesAndCharges = estimatedTradeValue * 0.0185;
+  const totalEstimatedAmount = estimatedTradeValue + feesAndCharges;
+
   return (
     <div className="border-0.5 border border-[#EEEFF1] bg-white rounded-[12px] px-4">
       <div className="text-txt-tertiary flex justify-between items-center py-5">
-        <p>Price per share</p> <p>11,020,084</p>
+        <p>Price per share</p> <p>₦{pricePerShare.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
       <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
-        <p>Estimated shares</p> <p>11,020,084</p>
+        <p>Estimated trade value</p> <p>₦{estimatedTradeValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
       <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
-        <p>Fees + Charges</p> <p>11,020,084</p>
+        <p>Fees + Charges (1.85%)</p> <p>₦{feesAndCharges.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
       <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
-        <p>Total amount due</p> <p>11,020,084</p>
+        <p>Total estimated amount</p> <p>₦{totalEstimatedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
     </div>
   );

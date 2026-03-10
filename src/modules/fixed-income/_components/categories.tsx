@@ -1,6 +1,5 @@
 import {
   bondsImg,
-  cashManagementImg,
   commercialPapersImg,
   treasuryBillsImg,
 } from "@/assets/images";
@@ -58,12 +57,6 @@ const categories: FixedIncomeCategoryData[] = [
     image: treasuryBillsImg.src,
     description:
       "Low-risk sovereign instruments for liquidity management and capital preservation.",
-  },
-  {
-    title: "Cash management",
-    image: cashManagementImg.src,
-    description:
-      "Low-volatility products for treasury cash with same-day or next-day liquidity.",
   },
 ];
 

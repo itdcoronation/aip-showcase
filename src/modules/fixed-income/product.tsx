@@ -185,11 +185,7 @@ const Details = ({
   estimatedCouponAmount: number;
 }) => {
   const riskLevel =
-    type === "Treasury bills"
-      ? "Low"
-      : type === "Cash management"
-      ? "Low to Moderate"
-      : "Moderate";
+    type === "Treasury bills" ? "Low" : "Moderate";
 
   return (
     <div className="border-0.5 border border-[#EEEFF1] bg-white rounded-[12px] p-4">
