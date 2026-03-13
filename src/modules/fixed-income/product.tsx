@@ -85,7 +85,7 @@ const FixedIncomeProductUI = () => {
                   onClick={() => router.push(`/fixed-income/${id}/withdraw`)}
                   size={"m"}
                 >
-                  Withdraw
+                  Sell
                   <TrendingUp />
                 </Button>
               </>
@@ -164,6 +164,7 @@ const FixedIncomeProductUI = () => {
             tenure={displayTenure}
             issuer={displayIssuer}
             estimatedCouponAmount={estimatedCouponAmount}
+            prospectusLink={categoryProduct?.prospectusLink}
           />
         )}
       </section>
@@ -177,12 +178,14 @@ const Details = ({
   tenure,
   issuer,
   estimatedCouponAmount,
+  prospectusLink,
 }: {
   type: string;
   rate: number;
   tenure: string;
   issuer: string;
   estimatedCouponAmount: number;
+  prospectusLink?: string;
 }) => {
   const riskLevel =
     type === "Treasury bills" ? "Low" : "Moderate";
@@ -209,6 +212,24 @@ const Details = ({
         <p>Estimated coupon amount</p>
         <p>₦{estimatedCouponAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
       </div>
+      {prospectusLink && (
+        <div className="border-t border-stroke-primary pt-4 mt-2">
+          <Button
+            asChild
+            variant="outline"
+            size="m"
+            className="w-full"
+          >
+            <a
+              href={prospectusLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download Bond Prospectus
+            </a>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

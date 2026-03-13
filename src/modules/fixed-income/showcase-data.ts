@@ -27,6 +27,7 @@ export interface FixedIncomeCategoryProduct {
   rate: number;
   tenure: string;
   shortDescription: string;
+  prospectusLink?: string;
 }
 
 export const fixedIncomeTradesData: TradesFixedIncomeTableData[] = [
@@ -44,8 +45,8 @@ export const fixedIncomeTradesData: TradesFixedIncomeTableData[] = [
   },
   {
     id: "2",
-    name: "FGN Savings Bond Mar 2027",
-    short_form: "FGNSB27",
+    name: "NBET Finance Company Bond",
+    short_form: "NBET",
     logo: mutualFundLogo.src,
     rate: 16.2,
     amount_invested: 8000000,
@@ -95,14 +96,14 @@ export const fixedIncomeRequestData: RequestsFixedIncomeTableData[] = [
   },
   {
     id: "2",
-    name: "FGN Bond Apr 2029",
-    short_form: "FGN29",
+    name: "NBET Finance Company Bond",
+    short_form: "NBET",
     logo: mutualFundLogo.src,
     txn_date: "18 May, 2025",
     txn_amount: 6000000,
-    rate: 15.8,
+    rate: 16.2,
     txn_type: "invest",
-    tenure: "4 years",
+    tenure: "2 years",
     fund_type: "Bonds",
   },
   {
@@ -145,12 +146,12 @@ export const fixedIncomeHistoryData: FixedIncomeHistoryTableData[] = [
   },
   {
     id: "2",
-    name: "FGN Savings Bond Jan 2026",
-    short_form: "FGNSB26",
+    name: "Trust Bank Bond",
+    short_form: "TRUSTBANK",
     logo: mutualFundLogo.src,
     txn_date: "15 Mar, 2025",
     txn_amount: 3500000,
-    rate: 14.7,
+    rate: 15.4,
     txn_type: "redeem",
     status: "successful",
   },
@@ -213,39 +214,29 @@ export const fixedIncomeCategoryOptions: FixedIncomeCategoryOption[] = [
 export const fixedIncomeCategoryProducts: FixedIncomeCategoryProduct[] = [
   {
     id: "2",
-    name: "FGN Savings Bond Mar 2027",
-    short_form: "FGNSB27",
+    name: "NBET Finance Company Bond",
+    short_form: "NBET",
     logo: mutualFundLogo.src,
     category: "bonds",
     type: "Bonds",
-    issuer: "Debt Management Office (FGN)",
+    issuer: "NBET Finance Company",
     rate: 16.2,
     tenure: "2 years",
-    shortDescription: "Sovereign naira bond with fixed semi-annual coupon and low credit risk.",
+    shortDescription: "Corporate bond offering competitive returns with predictable coupon payments.",
+    prospectusLink: "https://drive.google.com/file/d/118AlGt6mYP1E_uxeCJ0Frw7rSJu1esog/view?usp=sharing",
   },
   {
     id: "6",
-    name: "FGN Sovereign Sukuk 2031",
-    short_form: "FGNSUK31",
+    name: "Trust Bank Bond",
+    short_form: "TRUSTBANK",
     logo: mutualFundLogo.src,
     category: "bonds",
     type: "Bonds",
-    issuer: "Debt Management Office (FGN)",
+    issuer: "Trust Bank",
     rate: 15.4,
-    tenure: "6 years",
-    shortDescription: "Asset-backed sovereign issuance offering stable long-dated income.",
-  },
-  {
-    id: "7",
-    name: "Access Holdings Bond 2028",
-    short_form: "ACCESS28",
-    logo: mutualFundLogo.src,
-    category: "bonds",
-    type: "Bonds",
-    issuer: "Access Holdings Plc",
-    rate: 17.0,
     tenure: "3 years",
-    shortDescription: "Corporate bond from a tier-one Nigerian financial institution.",
+    shortDescription: "Fixed-income security from a trusted financial institution with stable returns.",
+    prospectusLink: "https://drive.google.com/file/d/1h_zjOYkGLVlxsCM293oES6ZNNqtbIfd-/view?usp=sharing",
   },
   {
     id: "1",

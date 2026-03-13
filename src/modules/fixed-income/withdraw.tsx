@@ -113,7 +113,7 @@ const WithdrawFixedIncomeUI = () => {
           setShowOtp(false);
           setShow(true);
         }}
-        continueText="Confirm withdrawal"
+        continueText="Confirm sale"
       />
       <NoticeModal
         show={show}
@@ -143,17 +143,17 @@ const WithdrawFixedIncomeUI = () => {
       <section className="mx-auto max-w-[940px] mt-8">
         <div className="mb-4">
           <h2 className="text-h4 sm:text-h3 font-semibold text-txt-primary mb-1">
-            Withdraw {fundName}
+            Sell {fundName}
           </h2>
           <p className="text-p4 sm:text-p3 text-txt-tertiary">
-            Please enter the amount of you would like to Withdraw
+            Please enter the amount of you would like to Sell
           </p>
         </div>
         <form className="text-sm">
           <div className="mb-4">
             <div className="flex-col sm:flex-row flex gap-4 sm:items-center justify-between border border-stroke-secondary bg-bg-secondary px-4 py-4 sm:py-6 rounded-[12px]">
               <div className="">
-                <p className="text-txt-secondary mb-2">Amount to Withdraw</p>
+                <p className="text-txt-secondary mb-2">Amount to Sell</p>
                 <div className="flex gap-2">
                   <p className="text-h2 text-txt-tertiary items-center">₦</p>
                   <Controller
@@ -184,7 +184,7 @@ const WithdrawFixedIncomeUI = () => {
                   </span>
                 </p>
                 <Button variant={"outline"} size="m" className="bg-white w-fit">
-                  Withdraw everything
+                  Sell everything
                 </Button>
               </div>
             </div>
@@ -202,7 +202,7 @@ const WithdrawFixedIncomeUI = () => {
             rules={{ required: "Reason is required" }}
             render={({ field }) => (
               <SelectInput
-                label="Reason for withdrawal"
+                label="Reason for sale"
                 options={fundWithdrawalReasonOptions}
                 required
                 onChange={(value) => field.onChange(value)}
@@ -250,7 +250,7 @@ const WithdrawFixedIncomeUI = () => {
             disabled={!isValid}
             className="w-full mt-8 mb-2"
           >
-            Withdraw <ChevronRight />
+            Sell <ChevronRight />
           </Button>
         </form>
       </section>
