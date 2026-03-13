@@ -16,25 +16,25 @@ const tableData: ReferralTableData[] = [
   {
     id: "2",
     avatar: "",
-    account_name: "John Doe",
+    account_name: "Mercy Nweke",
     date_registered: "24 Apr, 2025",
   },
   {
     id: "3",
     avatar: "",
-    account_name: "John Doe",
+    account_name: "Mercy Nweke",
     date_registered: "24 Apr, 2025",
   },
   {
     id: "4",
     avatar: "",
-    account_name: "John Doe",
+    account_name: "Mercy Nweke",
     date_registered: "24 Apr, 2025",
   },
   {
     id: "5",
     avatar: "",
-    account_name: "John Doe",
+    account_name: "Mercy Nweke",
     date_registered: "24 Apr, 2025",
   },
 ];

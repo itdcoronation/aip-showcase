@@ -41,7 +41,7 @@ interface OnboardingState {
 const useOnboardingStore = create<OnboardingState>()(
   persist(
     (set) => ({
-      title: "Welcome Philip Ofei 👋🏾",
+      title: "Welcome Mercy Nweke 👋🏾",
       description: "Complete a few quick steps to start enjoying our platform.",
       isOnboarded: false,
       setIsOnboarded: (isOnboarded) => set({ isOnboarded }),

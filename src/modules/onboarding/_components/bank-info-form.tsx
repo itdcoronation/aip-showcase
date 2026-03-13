@@ -154,7 +154,7 @@ const BankInfoForm: React.FC<BankInfoFormProps> = ({
             if (e.target.value.length === 10) {
               if (process.env.NODE_ENV === "development") {
                 // Auto-fill account name in development for easier testing
-                setAccountName("John Doe");
+                setAccountName("Mercy Nweke");
               } else {
                 mutate({
                   accountNumber: e.target.value,

@@ -13,7 +13,7 @@ const tableData: MinorAccountTableData[] = [
   // Add dummy data
   {
     id: "1",
-    account_name: "John Doe",
+    account_name: "Mercy Nweke",
     email: "johndoe@gmai.com",
     gender: "male",
     dob: "12 Jul, 2015",

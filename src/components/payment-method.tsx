@@ -159,7 +159,7 @@ const BankDetails = ({
           <div className="flex items-center gap-2 flex-1">
             {/* REPLACED: was hardcoded "11,020,084" - now using API response */}
             <p className="text-right flex-1">
-              {bankInfo?.bankName || "Pending"}
+              {bankInfo?.bankName || "Coronation Merchant Bank"}
             </p>
             {bankInfo?.bankName ? (
               <CopySimpleIcon
@@ -177,7 +177,7 @@ const BankDetails = ({
           <div className="flex items-center gap-2 flex-1">
             {/* REPLACED: was hardcoded "11,020,084" - now using API response */}
             <p className="text-right flex-1 break-words">
-              {bankInfo?.accountName || "Pending"}
+              {bankInfo?.accountName || "Mercy Nweke"}
             </p>
             {bankInfo?.accountName ? (
               <CopySimpleIcon
@@ -195,7 +195,7 @@ const BankDetails = ({
           <div className="flex items-center gap-2 flex-1">
             {/* REPLACED: was hardcoded "11,020,084" - now using API response */}
             <p className="text-right flex-1">
-              {bankInfo?.accountNumber || "Pending"}
+              {bankInfo?.accountNumber || "7110359449"}
             </p>
             {bankInfo?.accountNumber ? (
               <CopySimpleIcon

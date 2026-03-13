@@ -55,7 +55,7 @@ const AccountFullNameForm = () => {
           required
           parentClassName="w-full"
           disabled
-          value={"John Doe"}
+          value={"Mercy Nweke"}
         />
         <Input
           label="First Name"

@@ -218,13 +218,13 @@ const getShowcaseData = (
     return successEnvelope({
       staging_id: "SHOWCASE-STAGING-001",
       completion_status: {
-        status: "approved",
-        completion_percentage: "100",
-        personal_info: true,
-        bank_info: true,
-        next_of_kin: true,
-        kyc: true,
-        risk_profile: true,
+        status: "draft",
+        completion_percentage: "",
+        personal_info: false,
+        bank_info: false,
+        next_of_kin: false,
+        kyc: false,
+        risk_profile: false,
       },
     });
   }
@@ -237,6 +237,393 @@ const getShowcaseData = (
       last_name: "User",
       email: "showcase@demo.com",
     });
+  }
+
+  if (url.includes("/api/onboarding/personal-info")) {
+    return {
+      success: true,
+      message: "Personal information saved successfully",
+      data: {
+        staging_id: "SHOWCASE-STAGING-001",
+        completion_percentage: "20",
+        completion_status: {
+          status: "draft",
+          personal_info: true,
+          bank_info: false,
+          next_of_kin: false,
+          kyc: false,
+          risk_profile: false,
+        },
+      },
+    };
+  }
+
+  if (url.includes("/api/onboarding/bank-info")) {
+    return {
+      success: true,
+      message: "Bank information saved successfully",
+      data: {
+        staging_id: "SHOWCASE-STAGING-001",
+        completion_percentage: "40",
+        completion_status: {
+          status: "draft",
+          personal_info: true,
+          bank_info: true,
+          next_of_kin: false,
+          kyc: false,
+          risk_profile: false,
+        },
+      },
+    };
+  }
+
+  if (url.includes("/api/onboarding/next-of-kin")) {
+    return {
+      success: true,
+      message: "Next of kin information saved successfully",
+      data: {
+        staging_id: "SHOWCASE-STAGING-001",
+        completion_percentage: "60",
+        completion_status: {
+          status: "draft",
+          personal_info: true,
+          bank_info: true,
+          next_of_kin: true,
+          kyc: false,
+          risk_profile: false,
+        },
+      },
+    };
+  }
+
+  if (url.includes("/api/onboarding/kyc")) {
+    return {
+      success: true,
+      message: "KYC information saved successfully",
+      data: {
+        staging_id: "SHOWCASE-STAGING-001",
+        completion_percentage: "80",
+        completion_status: {
+          status: "draft",
+          personal_info: true,
+          bank_info: true,
+          next_of_kin: true,
+          kyc: true,
+          risk_profile: false,
+        },
+      },
+    };
+  }
+
+  if (url.includes("/api/onboarding/risk-profile")) {
+    return {
+      success: true,
+      message: "Risk profile saved successfully",
+      data: {
+        staging_id: "SHOWCASE-STAGING-001",
+        completion_percentage: "100",
+        completion_status: {
+          status: "approved",
+          personal_info: true,
+          bank_info: true,
+          next_of_kin: true,
+          kyc: true,
+          risk_profile: true,
+        },
+      },
+    };
+  }
+
+  if (url.includes("/api/utils/states")) {
+    return {
+      success: true,
+      message: "States retrieved successfully",
+      data: [
+        {
+          id: 1,
+          name: "Lagos",
+          code: "LA",
+          geopolitical_zone: "South West",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+          category: "state",
+          capital: "Ikeja",
+          description: "Lagos State",
+          created: "2024-01-01T00:00:00.000Z",
+          area_km2: 3577,
+          slogan: "Centre of Excellence",
+        },
+        {
+          id: 2,
+          name: "Abuja",
+          code: "FC",
+          geopolitical_zone: "North Central",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+          category: "state",
+          capital: "Abuja",
+          description: "Federal Capital Territory",
+          created: "2024-01-01T00:00:00.000Z",
+          area_km2: 7315,
+          slogan: "Centre of Unity",
+        },
+        {
+          id: 3,
+          name: "Ogun",
+          code: "OG",
+          geopolitical_zone: "South West",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+          category: "state",
+          capital: "Abeokuta",
+          description: "Ogun State",
+          created: "2024-01-01T00:00:00.000Z",
+          area_km2: 16762,
+          slogan: "Gateway State",
+        },
+        {
+          id: 4,
+          name: "Rivers",
+          code: "RI",
+          geopolitical_zone: "South South",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+          category: "state",
+          capital: "Port Harcourt",
+          description: "Rivers State",
+          created: "2024-01-01T00:00:00.000Z",
+          area_km2: 11077,
+          slogan: "Treasure Base of the Nation",
+        },
+      ],
+      pagination: {
+        current_page: 1,
+        per_page: 50,
+        total: 4,
+        last_page: 1,
+        from: 1,
+        to: 4,
+      },
+      filters: {
+        search: null,
+        geopolitical_zone: null,
+        category: "state",
+      },
+    };
+  }
+
+  if (url.includes("/api/utils/lgas")) {
+    const stateCode = (body.state_code as string) || "LA";
+    const lgaMap: Record<string, string[]> = {
+      LA: [
+        "Agege",
+        "Ajeromi-Ifelodun",
+        "Alimosho",
+        "Amuwo-Odofin",
+        "Apapa",
+        "Badagry",
+        "Epe",
+        "Eti-Osa",
+        "Ibeju-Lekki",
+        "Ifako-Ijaiye",
+        "Ikeja",
+        "Ikorodu",
+        "Kosofe",
+        "Lagos Island",
+        "Lagos Mainland",
+        "Mushin",
+        "Ojo",
+        "Oshodi-Isolo",
+        "Shomolu",
+        "Surulere",
+      ],
+      FC: [
+        "Abaji",
+        "Abuja Municipal",
+        "Bwari",
+        "Gwagwalada",
+        "Kuje",
+        "Kwali",
+      ],
+      OG: [
+        "Abeokuta North",
+        "Abeokuta South",
+        "Ado-Odo/Ota",
+        "Ewekoro",
+        "Ifo",
+        "Ijebu East",
+        "Ijebu North",
+        "Ijebu Ode",
+        "Ikenne",
+        "Imeko Afon",
+        "Ipokia",
+        "Obafemi Owode",
+        "Odogbolu",
+        "Odeda",
+        "Ogun Waterside",
+        "Remo North",
+        "Shagamu",
+      ],
+      RI: [
+        "Abua/Odual",
+        "Ahoada East",
+        "Ahoada West",
+        "Akuku-Toru",
+        "Andoni",
+        "Asari-Toru",
+        "Bonny",
+        "Degema",
+        "Eleme",
+        "Emohua",
+        "Etche",
+        "Gokana",
+        "Ikwerre",
+        "Khana",
+        "Obio/Akpor",
+        "Ogba/Egbema/Ndoni",
+        "Ogu/Bolo",
+        "Okrika",
+        "Omuma",
+        "Opobo/Nkoro",
+        "Oyigbo",
+        "Port Harcourt",
+        "Tai",
+      ],
+    };
+
+    const lgas = lgaMap[stateCode] || lgaMap["LA"];
+    const stateNames: Record<string, string> = {
+      LA: "Lagos",
+      FC: "Abuja",
+      OG: "Ogun",
+      RI: "Rivers",
+    };
+
+    return {
+      success: true,
+      message: "LGAs retrieved successfully",
+      data: {
+        state_name: stateNames[stateCode] || "Lagos",
+        state_code: stateCode,
+        total_lgas: lgas.length,
+        lgas,
+      },
+      filters: {
+        search: null,
+      },
+    };
+  }
+
+  if (url.includes("/api/utils/banks")) {
+    return {
+      message: "Banks retrieved successfully",
+      status: true,
+      code: 200,
+      data: [
+        {
+          id: 1,
+          cbn_code: "000001",
+          name: "Sterling Bank",
+          slug: "sterling-bank",
+          is_active: true,
+          description: "Sterling Bank Plc",
+          website: "https://www.sterling.ng",
+          logo_url: "/coins.png",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+        },
+        {
+          id: 2,
+          cbn_code: "000002",
+          name: "Keystone Bank",
+          slug: "keystone-bank",
+          is_active: true,
+          description: "Keystone Bank Limited",
+          website: "https://www.keystonebankng.com",
+          logo_url: "/coins.png",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+        },
+        {
+          id: 3,
+          cbn_code: "000003",
+          name: "First City Monument Bank",
+          slug: "fcmb",
+          is_active: true,
+          description: "FCMB",
+          website: "https://www.fcmb.com",
+          logo_url: "/coins.png",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+        },
+        {
+          id: 4,
+          cbn_code: "000004",
+          name: "United Bank for Africa",
+          slug: "uba",
+          is_active: true,
+          description: "UBA Plc",
+          website: "https://www.ubagroup.com",
+          logo_url: "/coins.png",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+        },
+        {
+          id: 5,
+          cbn_code: "000005",
+          name: "Access Bank",
+          slug: "access-bank",
+          is_active: true,
+          description: "Access Bank Plc",
+          website: "https://www.accessbankplc.com",
+          logo_url: "/coins.png",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+        },
+        {
+          id: 6,
+          cbn_code: "000014",
+          name: "Zenith Bank",
+          slug: "zenith-bank",
+          is_active: true,
+          description: "Zenith Bank Plc",
+          website: "https://www.zenithbank.com",
+          logo_url: "/coins.png",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+        },
+        {
+          id: 7,
+          cbn_code: "000016",
+          name: "Guaranty Trust Bank",
+          slug: "gtbank",
+          is_active: true,
+          description: "GTBank / GTCO",
+          website: "https://www.gtbank.com",
+          logo_url: "/coins.png",
+          created_at: "2024-01-01T00:00:00.000Z",
+          updated_at: "2024-01-01T00:00:00.000Z",
+        },
+      ],
+      count: 7,
+      timestamp: now(),
+    };
+  }
+
+  if (url.includes("/api/utils/bank-name-inquiry")) {
+    return {
+      Status: true,
+      Code: "00",
+      Message: "Account name retrieved successfully",
+      Data: {
+        accountNumber: (body.accountNumber as string) || "1234567890",
+        cbnCode: (body.cbnCode as string) || "000014",
+        accountName: "Showcase User Account",
+        statusID: 0,
+        statusText: "Success",
+      },
+      timestamp: now(),
+    };
   }
 
   if (url.includes("/api/portfolio/balance")) {
@@ -399,10 +786,37 @@ const getShowcaseData = (
           brokerage_balance: 250000,
           isBalanceAvailable: true,
         },
-        cosec: [],
+        cosec: [
+          {
+            accountID: "7110359449",
+            sub: "SHOWCASE-USER",
+            description: "Brokerage Account",
+            type: "virtual_account",
+            sumOfAmount: "250000",
+          },
+        ],
       },
       timestamp: now(),
     });
+  }
+
+  if (url.includes("/api/equities/bank-details")) {
+    return {
+      success: true,
+      message: "Bank details retrieved successfully",
+      data: {
+        user_id: "showcase-user",
+        investment_account: {
+          accountName: "Mercy Nweke",
+          accountNumber: "7110359449",
+          bankName: "Coronation Merchant Bank",
+          AccountName: "Mercy Nweke",
+          AccountNumber: "7110359449",
+          BankName: "Coronation Merchant Bank",
+        },
+      },
+      timestamp: now(),
+    };
   }
 
   if (url.includes("/api/equities/top-gainers")) {

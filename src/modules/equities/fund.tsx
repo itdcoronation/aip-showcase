@@ -8,7 +8,8 @@ import { NoticeModal } from "@/components/modals/notice-modal";
 import { ROUTES } from "@/lib/routes";
 import CurrencyInput from "react-currency-input-field";
 import { PaymentMethod } from "@/components/payment-method";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useFetchEquitiesBankDetails } from "@/requests/services/equities/bank-details";
 
 const schema = z
   .object({
@@ -42,6 +43,23 @@ const EquitiesFundUI = () => {
   const [show, setShow] = useState(false);
 
   const router = useRouter();
+
+  // Fetch bank details for equities account
+  const { data: bankDetailsData } = useFetchEquitiesBankDetails();
+
+  const investmentAccount = useMemo(() => {
+    const account = (bankDetailsData as any)?.data?.investment_account;
+
+    if (!account || typeof account !== "object") return null;
+
+    return {
+      accountName:
+        account.AccountName ?? account.accountName ?? account.account_name ?? "",
+      accountNumber:
+        account.AccountNumber ?? account.accountNumber ?? account.account_number ?? "",
+      bankName: account.BankName ?? account.bankName ?? account.bank_name ?? "",
+    };
+  }, [bankDetailsData]);
 
   const {
     handleSubmit,
@@ -150,6 +168,16 @@ const EquitiesFundUI = () => {
               onSelectMethod={setMethod}
               card={card ?? ""}
               onSelectCard={setCard}
+              bankInfo={
+                bankDetailsData?.success && investmentAccount
+                  ? {
+                      accountName: investmentAccount.accountName,
+                      accountNumber: investmentAccount.accountNumber,
+                      bankName: investmentAccount.bankName,
+                      reference: (bankDetailsData as any).data?.user_id || "",
+                    }
+                  : undefined
+              }
             />
 
             <Button

@@ -30,13 +30,13 @@ const roundDownToNearestThousand = (value?: string | null) => {
 const banks: BankAccountData[] = [
   {
     id: "1",
-    accountName: "Philip Ofei",
+    accountName: "Mercy Nweke",
     accountNumber: "1234567890",
     bankName: "Coronation bank",
   },
   {
     id: "2",
-    accountName: "Philip Ofei",
+    accountName: "Mercy Nweke",
     accountNumber: "1234567890",
     bankName: "Access bank",
   },
