@@ -15,6 +15,17 @@ import CurrencyInput from "react-currency-input-field";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { resolveShowcaseFixedIncomeName } from "@/lib/showcase-display-names";
+import { isShowcaseMode } from "@/lib/showcase";
+
+const roundDownToNearestThousand = (value?: string | null) => {
+  if (!value) return "";
+
+  const parsed = Number(value.replace(/,/g, ""));
+  if (!Number.isFinite(parsed)) return "";
+
+  const rounded = Math.floor(parsed / 1000) * 1000;
+  return rounded > 0 ? String(rounded) : "";
+};
 
 const banks: BankAccountData[] = [
   {
@@ -31,22 +42,34 @@ const banks: BankAccountData[] = [
   },
 ];
 
-const formSchema = z.object({
-  reason: z.string().min(1, "Select a reason"),
-  amount: z
-    .string()
-    .min(1, "Amount is required")
-    .refine(
-      (val) => {
-        // Remove commas and parse to number
-        const num = Number(val.replace(/,/g, ""));
-        return !isNaN(num) && num <= 500000;
-      },
-      { message: "Maximum amount is 500,000" }
-    ),
-});
+const createFormSchema = (enforceThousandRule: boolean) =>
+  z.object({
+    reason: z.string().min(1, "Select a reason"),
+    amount: z
+      .string()
+      .min(1, "Amount is required")
+      .refine(
+        (val) => {
+          // Remove commas and parse to number
+          const num = Number(val.replace(/,/g, ""));
+          return !isNaN(num) && num <= 500000;
+        },
+        { message: "Maximum amount is 500,000" }
+      )
+      .refine(
+        (val) => {
+          if (!enforceThousandRule) return true;
+          const num = Number(val.replace(/,/g, ""));
+          return Number.isInteger(num) && num % 1000 === 0;
+        },
+        { message: "Amount must be in whole thousands (e.g. 5,001,000)" }
+      ),
+  });
 
-type WithdrawFormData = z.infer<typeof formSchema>;
+type WithdrawFormData = {
+  reason: string;
+  amount: string;
+};
 
 const WithdrawFixedIncomeUI = () => {
   const [addBank, setAddBank] = useState(false);
@@ -59,10 +82,11 @@ const WithdrawFixedIncomeUI = () => {
   const fundName = resolveShowcaseFixedIncomeName(
     typeof id === "string" ? id : undefined
   );
+  const enforceThousandRule = isShowcaseMode;
+  const formSchema = createFormSchema(enforceThousandRule);
 
   const {
     handleSubmit,
-    register,
     formState: { errors, isValid },
     control,
   } = useForm<WithdrawFormData>({
@@ -93,7 +117,12 @@ const WithdrawFixedIncomeUI = () => {
       />
       <NoticeModal
         show={show}
-        close={() => setShow(false)}
+        close={() => {
+          setShow(false);
+          if (isShowcaseMode) {
+            router.push("/fixed-income");
+          }
+        }}
         description="Your request is received. A member of our fixed income team will reach out to you"
         title="Successful"
         action={{
@@ -103,7 +132,7 @@ const WithdrawFixedIncomeUI = () => {
               <ChevronRight className="min-w-[20px] !h-[20px]" />
             </>
           ),
-          action: console.log,
+          action: () => router.push("/fixed-income"),
         }}
       />
 
@@ -127,13 +156,23 @@ const WithdrawFixedIncomeUI = () => {
                 <p className="text-txt-secondary mb-2">Amount to Withdraw</p>
                 <div className="flex gap-2">
                   <p className="text-h2 text-txt-tertiary items-center">₦</p>
-                  <CurrencyInput
-                    {...register("amount", {
-                      required: true,
-                    })}
-                    decimalsLimit={2}
-                    className="text-h2 w-full"
-                    placeholder="0.00"
+                  <Controller
+                    name="amount"
+                    control={control}
+                    render={({ field }) => (
+                      <CurrencyInput
+                        value={field.value}
+                        onValueChange={(value) => field.onChange(value ?? "")}
+                        onBlur={() => {
+                          if (!enforceThousandRule) return;
+                          field.onChange(roundDownToNearestThousand(field.value));
+                        }}
+                        allowDecimals={!enforceThousandRule}
+                        decimalsLimit={enforceThousandRule ? 0 : 2}
+                        className="text-h2 w-full"
+                        placeholder={enforceThousandRule ? "0" : "0.00"}
+                      />
+                    )}
                   />
                 </div>
               </div>

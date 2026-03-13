@@ -19,6 +19,7 @@ import {
 import { sanitizeError, generateErrorId } from "@/lib/error-sanitization";
 import { checkRedeemAvailability } from "@/lib/fund-restrictions";
 import { useModalContext } from "@/context/modal-context";
+import { isShowcaseMode } from "@/lib/showcase";
 import { getShowcaseMutualFund } from "./showcase-data";
 
 const formSchema = z.object({
@@ -165,7 +166,12 @@ const RedeemMutualFundsUI = () => {
       />
       <NoticeModal
         show={show}
-        close={() => setShow(false)}
+        close={() => {
+          setShow(false);
+          if (isShowcaseMode && noticeTitle === "Successful! 🎉") {
+            router.push("/mutual-funds");
+          }
+        }}
         description={noticeDescription}
         title={noticeTitle}
         type={noticeType}
@@ -181,7 +187,7 @@ const RedeemMutualFundsUI = () => {
                 ),
                 action: () => {
                   setShow(false);
-                  router.push("/overview");
+                  router.push("/mutual-funds");
                   handleFeedbackState({
                     showFeedback: true,
                     description: "How was your experience redeeming mutual funds?",

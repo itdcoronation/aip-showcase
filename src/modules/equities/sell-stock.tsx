@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { NoticeModal } from "@/components/modals/notice-modal";
 import { OtpModal } from "@/components/modals/otp-modal";
 import { resolveShowcaseStockName } from "@/lib/showcase-display-names";
+import { isShowcaseMode } from "@/lib/showcase";
 import { getShowcaseStockDetail } from "./showcase-data";
 
 const formSchema = z
@@ -89,7 +90,12 @@ export const SellStockUI = () => {
       />
       <NoticeModal
         show={show}
-        close={() => setShow(false)}
+        close={() => {
+          setShow(false);
+          if (isShowcaseMode) {
+            router.push("/equities");
+          }
+        }}
         description="Please note that this message is not a confirmation of trade execution. Trade execution is dependent on prevailing market activity and is subject to a settlement timeline of T+2 working days. Kindly check your email for the details of your transaction."
         title="Successful! 🎉"
         action={{
@@ -99,7 +105,7 @@ export const SellStockUI = () => {
               <ChevronRight className="min-w-[20px] !h-[20px]" />
             </>
           ),
-          action: console.log,
+          action: () => router.push("/equities"),
         }}
       />
 

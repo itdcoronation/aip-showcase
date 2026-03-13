@@ -154,7 +154,7 @@ const FixedIncomeProductUI = () => {
             <PurchasedDetails txnDate={tradeProduct?.txn_date} tenure={displayTenure} />
             <Notice
               title="Important"
-              description="Please note that subscription made after 12pm will be applied in the next working day"
+              description="Please note that subscription made after 4pm will be applied in the next working day"
             />
           </>
         ) : (

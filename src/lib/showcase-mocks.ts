@@ -194,8 +194,8 @@ const getShowcaseData = (
         email: "showcase@demo.com",
         bvn: "22334455667",
         phone_number: "+2348012345678",
-        first_name: "Showcase",
-        last_name: "User",
+        first_name: "Mercy",
+        last_name: "Nweke",
       },
     });
   }
