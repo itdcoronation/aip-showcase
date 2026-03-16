@@ -52,9 +52,9 @@ const createFormSchema = (enforceThousandRule: boolean) =>
         (val) => {
           // Remove commas and parse to number
           const num = Number(val.replace(/,/g, ""));
-          return !isNaN(num) && num <= 500000;
+          return !isNaN(num) && num <= 5000000;
         },
-        { message: "Maximum amount is 500,000" }
+        { message: "Maximum amount is 5,000,000" }
       )
       .refine(
         (val) => {

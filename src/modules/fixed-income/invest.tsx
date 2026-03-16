@@ -15,7 +15,8 @@ import {
   fixedIncomeTradesData,
 } from "./showcase-data";
 
-const FIXED_INCOME_MINIMUM_INVESTMENT = 5000000;
+const BONDS_MINIMUM_INVESTMENT = 1000000;
+const CP_TBILLS_MINIMUM_INVESTMENT = 100000;
 const FIXED_INCOME_FEE_RATE = 0.005;
 
 const roundDownToNearestThousand = (value?: string | null) => {
@@ -46,6 +47,9 @@ const InvestFixedIncomeUI = () => {
   const isFaceValueInstrument =
     displayType === "Treasury bills" || displayType === "Commercial Papers";
   const isBondInstrument = displayType === "Bonds";
+  const minimumInvestment = isFaceValueInstrument
+    ? CP_TBILLS_MINIMUM_INVESTMENT
+    : BONDS_MINIMUM_INVESTMENT;
 
   return (
     <>
@@ -92,6 +96,7 @@ const InvestFixedIncomeUI = () => {
             isFaceValueInstrument={isFaceValueInstrument}
             isBondInstrument={isBondInstrument}
             rate={displayRate}
+            minimumInvestment={minimumInvestment}
           />
         </section>
       </section>
@@ -99,7 +104,10 @@ const InvestFixedIncomeUI = () => {
   );
 };
 
-const createStep1FormSchema = (enforceThousandRule: boolean) =>
+const createStep1FormSchema = (
+  enforceThousandRule: boolean,
+  minimumInvestment: number
+) =>
   z.object({
     amount: z
       .string()
@@ -108,9 +116,13 @@ const createStep1FormSchema = (enforceThousandRule: boolean) =>
         (val) => {
           // Remove commas and parse to number
           const num = Number(val.replace(/,/g, ""));
-          return !isNaN(num) && num >= FIXED_INCOME_MINIMUM_INVESTMENT;
+          return !isNaN(num) && num >= minimumInvestment;
         },
-        { message: "This amount doesn’t meet the minimum investment requirement" }
+        {
+          message: `This amount doesn’t meet the minimum investment requirement (₦${minimumInvestment.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          })})`,
+        }
       )
       .refine(
         (val) => {
@@ -130,14 +142,19 @@ const Step1Form = ({
   isFaceValueInstrument,
   isBondInstrument,
   rate,
+  minimumInvestment,
 }: {
   handleNext: () => void;
   isFaceValueInstrument: boolean;
   isBondInstrument: boolean;
   rate: number;
+  minimumInvestment: number;
 }) => {
   const enforceThousandRule = isShowcaseMode;
-  const step1FormSchema = createStep1FormSchema(enforceThousandRule);
+  const step1FormSchema = createStep1FormSchema(
+    enforceThousandRule,
+    minimumInvestment
+  );
 
   const {
     handleSubmit,
@@ -188,7 +205,7 @@ const Step1Form = ({
             <p className="text-xs sm:text-sm text-txt-secondary">
               Minimum investment amount:{""}
               <span className="font-semibold text-txt-primary">
-                ₦ {FIXED_INCOME_MINIMUM_INVESTMENT.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                ₦ {minimumInvestment.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
             </p>
           </div>
