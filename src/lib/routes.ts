@@ -32,6 +32,8 @@ export enum ROUTES {
   overview = "/overview",
   rec_products = "/recommended-products",
   equities = "/equities",
+  insurance = "/insurance",
+  insurance_policy = "/insurance/policy",
   explore_equities = "/equities/explore",
   mutual_funds = "/mutual-funds",
   fixed_income = "/fixed-income",

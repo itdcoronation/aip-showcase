@@ -13,6 +13,7 @@ import {
   WalletIcon,
   WrenchIcon,
 } from "@/assets/vectors/icons";
+import { Shield } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { clearTokens } from "@/requests/token";
 import { NavItem, NavItemData } from "./nav-item";
@@ -64,6 +65,12 @@ export const NavSection = () => {
       icon: <NewspaperClippingIcon />,
       isActive:
         pathname === ROUTES.trustees || pathname.startsWith("/trustees"),
+    },
+    {
+      title: "Insurance",
+      path: ROUTES.insurance,
+      icon: <Shield size={20} />,
+      isActive: pathname.startsWith("/insurance"),
     },
   ];
 

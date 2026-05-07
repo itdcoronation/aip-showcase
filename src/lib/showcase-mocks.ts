@@ -938,6 +938,431 @@ const getShowcaseData = (
     });
   }
 
+  // Insurance API mocks
+  if (url.includes("/api/insurance/products")) {
+    return {
+      success: true,
+      data: {
+        third_party_motor_insurance: {
+          private: {
+            "Private Saloon": {
+              product_code: "PTSN001",
+              cover_code: "TPFT",
+              premium: 15000,
+              sum_insured: 1000000,
+            },
+            "Private SUV": {
+              product_code: "PSUV001",
+              cover_code: "TPFT",
+              premium: 20000,
+              sum_insured: 1500000,
+            },
+            "Private Van": {
+              product_code: "PVAN001",
+              cover_code: "TPFT",
+              premium: 18000,
+              sum_insured: 1200000,
+            },
+          },
+          commercial: {
+            "Commercial Bus": {
+              product_code: "CBUS001",
+              cover_code: "TPFT",
+              premium: 25000,
+              sum_insured: 2000000,
+            },
+            "Commercial Truck": {
+              product_code: "CTRK001",
+              cover_code: "TPFT",
+              premium: 35000,
+              sum_insured: 3000000,
+            },
+            "Commercial Van": {
+              product_code: "CVAN001",
+              cover_code: "TPFT",
+              premium: 22000,
+              sum_insured: 1800000,
+            },
+          },
+        },
+      },
+    };
+  }
+
+  if (url.includes("/api/insurance/vehicle-lookup")) {
+    return {
+      success: true,
+      data: {
+        vehicleMake: "Toyota",
+        vehicleModel: "Camry",
+        productionYear: "2020",
+        vinNumber: "JT2BF18K8X0123456",
+        engineNumber: "2AZ1234567",
+        color: "Silver",
+      },
+    };
+  }
+
+  if (url.includes("/api/insurance/policies/verify-payment")) {
+    return {
+      success: true,
+      data: { status: "active", message: "Payment verified successfully" },
+      message: "Payment verified successfully",
+    };
+  }
+
+  if (url.includes("/api/insurance/policies/create")) {
+    return {
+      success: true,
+      data: { id: 1001 },
+      message: "Draft policy created successfully",
+    };
+  }
+
+  if (url.match(/\/api\/insurance\/policies\/\d+\/update/)) {
+    return {
+      success: true,
+      data: {},
+      message: "Draft policy updated successfully",
+    };
+  }
+
+  if (url.match(/\/api\/insurance\/policies\/\d+\/delete/)) {
+    return {
+      success: true,
+      data: {},
+      message: "Draft policy deleted successfully.",
+    };
+  }
+
+  if (url.match(/\/api\/insurance\/policies\/\d+\/renew/)) {
+    return {
+      success: true,
+      data: {},
+      message: "Policy renewed successfully",
+    };
+  }
+
+  if (url.match(/\/api\/insurance\/policies\/\d+\/download/)) {
+    return {
+      success: true,
+      data: {
+        download_url: {
+          STATUS: "SUCCESS",
+          DATA: "https://www.w3.org/WAI/WCAG21/Techniques/pdf/sample.pdf",
+          DATA2: "https://www.w3.org/WAI/WCAG21/Techniques/pdf/sample.pdf",
+          DESCRIPTION: "Policy certificate",
+        },
+      },
+    };
+  }
+
+  if (url.match(/\/api\/insurance\/policies\/\d+$/)) {
+    const policyId = url.split("/").pop() ?? "1001";
+    return {
+      success: true,
+      data: {
+        id: Number(policyId),
+        start_date: "2025-03-26",
+        end_date: "2026-03-26",
+        status: "active",
+        duration: 365,
+        policy_number: `PMI-2025-${policyId}`,
+        user_id: 1,
+        type: "third_party_motor_insurance",
+        insurance_policy_type_snapshot: {
+          kind: "private",
+          premium: 15000,
+          cover_code: "TPFT",
+          sum_insured: 1000000,
+          product_code: "PTSN001",
+          vehicle_type: "Private Saloon",
+        },
+        insurance_policy_payload: {
+          vehicle: {
+            color: "Silver",
+            vin_number: "JT2BF18K8X0123456",
+            vehicle_make: "Toyota",
+            vehicle_type: "Private Saloon",
+            engine_number: "2AZ1234567",
+            vehicle_model: "Camry",
+            license_number: "ABC-123-DE",
+            production_year: 2020,
+            proof_of_ownership_media_id: 1,
+          },
+          policyholder: {
+            city: "Lagos",
+            email: "showcase@demo.com",
+            phone: "+2348012345678",
+            state: "Lagos",
+            title: "Mr",
+            street: "123 Main Street",
+            country: "Nigeria",
+            last_name: "User",
+            birth_date: "1990-01-15",
+            first_name: "Showcase",
+            middle_name: null,
+            house_number: "45",
+            identification_document_media_id: 2,
+          },
+        },
+        paystack_transaction_reference: null,
+        renew_insurance_policy_id: null,
+        payment_date: "2025-03-26",
+        processing_status: "Completed",
+        processing_updated_at: "2025-03-26T10:00:00Z",
+        deleted_at: null,
+        created_at: "2025-03-25T09:00:00Z",
+        updated_at: "2025-03-26T10:00:00Z",
+        policy_media: [],
+        media: [],
+      },
+    };
+  }
+
+  if (url.includes("/api/insurance/policies")) {
+    const statusParam = url.includes("status%5B%5D=active") || url.includes("status[]=active");
+    const isActive = statusParam || (!url.includes("status"));
+    return {
+      success: true,
+      data: isActive
+        ? [
+            {
+              id: 1001,
+              start_date: "2025-03-26",
+              end_date: "2026-03-26",
+              status: "active",
+              duration: 365,
+              policy_number: "PMI-2025-1001",
+              user_id: 1,
+              type: "third_party_motor_insurance",
+              insurance_policy_type_snapshot: {
+                kind: "private",
+                premium: 15000,
+                cover_code: "TPFT",
+                sum_insured: 1000000,
+                product_code: "PTSN001",
+                vehicle_type: "Private Saloon",
+              },
+              insurance_policy_payload: {
+                vehicle: {
+                  color: "Silver",
+                  vin_number: "JT2BF18K8X0123456",
+                  vehicle_make: "Toyota",
+                  vehicle_type: "Private Saloon",
+                  engine_number: "2AZ1234567",
+                  vehicle_model: "Camry",
+                  license_number: "ABC-123-DE",
+                  production_year: 2020,
+                  proof_of_ownership_media_id: 1,
+                },
+                policyholder: {
+                  city: "Lagos",
+                  email: "showcase@demo.com",
+                  phone: "+2348012345678",
+                  state: "Lagos",
+                  title: "Mr",
+                  street: "123 Main Street",
+                  country: "Nigeria",
+                  last_name: "User",
+                  birth_date: "1990-01-15",
+                  first_name: "Showcase",
+                  middle_name: null,
+                  house_number: "45",
+                  identification_document_media_id: 2,
+                },
+              },
+              paystack_transaction_reference: null,
+              renew_insurance_policy_id: null,
+              payment_date: "2025-03-26",
+              processing_status: "Completed",
+              processing_updated_at: "2025-03-26T10:00:00Z",
+              deleted_at: null,
+              created_at: "2025-03-25T09:00:00Z",
+              updated_at: "2025-03-26T10:00:00Z",
+              policy_media: [],
+              media: [],
+            },
+            {
+              id: 1002,
+              start_date: "2025-02-15",
+              end_date: "2026-02-15",
+              status: "active",
+              duration: 365,
+              policy_number: "CMI-2025-1002",
+              user_id: 1,
+              type: "third_party_motor_insurance",
+              insurance_policy_type_snapshot: {
+                kind: "commercial",
+                premium: 25000,
+                cover_code: "TPFT",
+                sum_insured: 2000000,
+                product_code: "CBUS001",
+                vehicle_type: "Commercial Bus",
+              },
+              insurance_policy_payload: {
+                vehicle: {
+                  color: "White",
+                  vin_number: "NKS22XBUS0987654",
+                  vehicle_make: "Mercedes",
+                  vehicle_type: "Commercial Bus",
+                  engine_number: "OM651B987654",
+                  vehicle_model: "Sprinter",
+                  license_number: "XYZ-789-FG",
+                  production_year: 2019,
+                  proof_of_ownership_media_id: 3,
+                },
+                policyholder: {
+                  city: "Abuja",
+                  email: "showcase@demo.com",
+                  phone: "+2348012345678",
+                  state: "FCT",
+                  title: "Mr",
+                  street: "456 Business Road",
+                  country: "Nigeria",
+                  last_name: "User",
+                  birth_date: "1990-01-15",
+                  first_name: "Showcase",
+                  middle_name: null,
+                  house_number: "12",
+                  identification_document_media_id: 4,
+                },
+              },
+              paystack_transaction_reference: null,
+              renew_insurance_policy_id: null,
+              payment_date: "2025-02-15",
+              processing_status: "Completed",
+              processing_updated_at: "2025-02-15T14:00:00Z",
+              deleted_at: null,
+              created_at: "2025-02-14T09:00:00Z",
+              updated_at: "2025-02-15T14:00:00Z",
+              policy_media: [],
+              media: [],
+            },
+          ]
+        : [
+            {
+              id: 1003,
+              start_date: "2024-01-10",
+              end_date: "2025-01-10",
+              status: "expired",
+              duration: 365,
+              policy_number: "PMI-2024-1003",
+              user_id: 1,
+              type: "third_party_motor_insurance",
+              insurance_policy_type_snapshot: {
+                kind: "private",
+                premium: 12000,
+                cover_code: "TPFT",
+                sum_insured: 800000,
+                product_code: "PTSN001",
+                vehicle_type: "Private Saloon",
+              },
+              insurance_policy_payload: {
+                vehicle: {
+                  color: "Blue",
+                  vin_number: "JT3HV86R1X0456789",
+                  vehicle_make: "Honda",
+                  vehicle_type: "Private Saloon",
+                  engine_number: "K20C456789",
+                  vehicle_model: "Accord",
+                  license_number: "LGS-456-KA",
+                  production_year: 2018,
+                  proof_of_ownership_media_id: 5,
+                },
+                policyholder: {
+                  city: "Lagos",
+                  email: "showcase@demo.com",
+                  phone: "+2348012345678",
+                  state: "Lagos",
+                  title: "Mr",
+                  street: "789 Old Street",
+                  country: "Nigeria",
+                  last_name: "User",
+                  birth_date: "1990-01-15",
+                  first_name: "Showcase",
+                  middle_name: null,
+                  house_number: "7",
+                  identification_document_media_id: 6,
+                },
+              },
+              paystack_transaction_reference: "PSTK-2024-ABC123",
+              renew_insurance_policy_id: null,
+              payment_date: "2024-01-10",
+              processing_status: "Completed",
+              processing_updated_at: "2024-01-10T09:00:00Z",
+              deleted_at: null,
+              created_at: "2024-01-09T09:00:00Z",
+              updated_at: "2024-01-10T09:00:00Z",
+              policy_media: [],
+              media: [],
+            },
+            {
+              id: 1004,
+              start_date: null,
+              end_date: null,
+              status: "draft",
+              duration: 365,
+              policy_number: null,
+              user_id: 1,
+              type: "third_party_motor_insurance",
+              insurance_policy_type_snapshot: {
+                kind: "private",
+                premium: 15000,
+                cover_code: "TPFT",
+                sum_insured: 1000000,
+                product_code: "PTSN001",
+                vehicle_type: "Private Saloon",
+              },
+              insurance_policy_payload: {
+                vehicle: {
+                  color: "Black",
+                  vin_number: "YV1RS61R312345678",
+                  vehicle_make: "Volvo",
+                  vehicle_type: "Private Saloon",
+                  engine_number: "B5254T3789012",
+                  vehicle_model: "S60",
+                  license_number: "ABJ-101-ZA",
+                  production_year: 2021,
+                  proof_of_ownership_media_id: 7,
+                },
+                policyholder: {
+                  city: "Port Harcourt",
+                  email: "showcase@demo.com",
+                  phone: "+2348012345678",
+                  state: "Rivers",
+                  title: "Mr",
+                  street: "22 New Estate",
+                  country: "Nigeria",
+                  last_name: "User",
+                  birth_date: "1990-01-15",
+                  first_name: "Showcase",
+                  middle_name: null,
+                  house_number: "3",
+                  identification_document_media_id: 8,
+                },
+              },
+              paystack_transaction_reference: null,
+              renew_insurance_policy_id: null,
+              payment_date: null,
+              processing_status: "Pending",
+              processing_updated_at: null,
+              deleted_at: null,
+              created_at: "2025-04-01T09:00:00Z",
+              updated_at: "2025-04-01T09:00:00Z",
+              policy_media: [],
+              media: [],
+            },
+          ],
+      pagination: {
+        current_page: 1,
+        per_page: 10,
+        total: isActive ? 2 : 2,
+        last_page: 1,
+      },
+    };
+  }
+
   return {
     success: true,
     status: "success",
