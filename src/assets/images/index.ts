@@ -15,6 +15,9 @@ import cashManagementImg from "./cash-management.png";
 import commercialPapersImg from "./commercial-papers.png";
 import treasuryBillsImg from "./treasury-bills.png";
 import executionImg from "./execution.png";
+import privateMotorInsuranceImg from "./private-motor-insurance.png";
+import commercialMotorInsuranceImg from "./commercial-motor-insurance.png";
+import otherInsuranceProductsImg from "./other-insurance-products.webp";
 
 export {
   bondsImg,
@@ -34,4 +37,7 @@ export {
   mutualFundImg,
   trusteeImg,
   fixedIncomeImg,
+  privateMotorInsuranceImg,
+  commercialMotorInsuranceImg,
+  otherInsuranceProductsImg,
 };
