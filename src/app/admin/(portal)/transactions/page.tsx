@@ -38,13 +38,21 @@ export default function TransactionsPage() {
   const [search, setSearch] = useState("");
 
   const names = useMemo(() => new Map(customers.map((c) => [c.id, c.name])), [customers]);
-  const pendingCount = transactions.filter((t) => isWithdrawal(t) && t.status === "pending").length;
+  const pendingCount = transactions.filter(
+    (t) =>
+      t.product === "fixed-income" &&
+      isWithdrawal(t) &&
+      t.status === "pending"
+  ).length;
 
   const rows = useMemo(() => {
     const q = search.trim().toLowerCase();
     return transactions.filter(
       (t) =>
-        (view === "all" || (isWithdrawal(t) && t.status === "pending")) &&
+        (view === "all" ||
+          (t.product === "fixed-income" &&
+            isWithdrawal(t) &&
+            t.status === "pending")) &&
         (product === "all" || t.product === product) &&
         (type === "all" || t.type === type) &&
         (status === "all" || t.status === status) &&
@@ -68,7 +76,9 @@ export default function TransactionsPage() {
       key: "actions",
       header: "Actions",
       render: (t) =>
-        isWithdrawal(t) && t.status === "pending" ? (
+        t.product === "fixed-income" &&
+        isWithdrawal(t) &&
+        t.status === "pending" ? (
           <div className="flex gap-2">
             <button
               type="button"

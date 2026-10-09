@@ -10,6 +10,7 @@ import {
   LogOut,
   Moon,
   ArrowLeftRight,
+  ShieldAlert,
   Sun,
 } from "lucide-react";
 import { getAdminEmail, signOutAdmin } from "@/lib/admin/utils";
@@ -17,6 +18,7 @@ import { useAdminStore } from "@/lib/admin/store";
 
 const NAV = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/fixed-income", label: "Fixed income monitoring", icon: ShieldAlert },
   { href: "/admin/monitoring", label: "Monitoring", icon: LineChart },
   { href: "/admin/transactions", label: "Transactions", icon: ArrowLeftRight },
   { href: "/admin/audit-log", label: "Audit log", icon: FileClock },
