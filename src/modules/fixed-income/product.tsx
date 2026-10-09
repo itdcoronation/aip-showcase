@@ -151,7 +151,14 @@ const FixedIncomeProductUI = () => {
 
         {bought ? (
           <>
-            <PurchasedDetails txnDate={tradeProduct?.txn_date} tenure={displayTenure} />
+            <PurchasedDetails
+              txnDate={tradeProduct?.txn_date}
+              tenure={displayTenure}
+              discountedValue={tradeProduct?.discounted_value ?? null}
+              remainingAmount={tradeProduct?.remaining_amount ?? null}
+              interestReversal={tradeProduct?.interest_reversal ?? null}
+              purchaseTimestamp={tradeProduct?.purchase_timestamp}
+            />
             <Notice
               title="Important"
               description="Please note that subscription made after 4pm will be applied in the next working day"
@@ -234,14 +241,52 @@ const Details = ({
   );
 };
 
-const PurchasedDetails = ({ txnDate, tenure }: { txnDate?: string; tenure: string }) => {
+const PurchasedDetails = ({
+  txnDate,
+  tenure,
+  discountedValue,
+  remainingAmount,
+  interestReversal,
+  purchaseTimestamp,
+}: {
+  txnDate?: string;
+  tenure: string;
+  discountedValue: number | null;
+  remainingAmount: number | null;
+  interestReversal: number | null;
+  purchaseTimestamp?: string;
+}) => {
+  const formatCurrency = (amount: number) =>
+    `₦${amount.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  const formattedPurchaseTimestamp = purchaseTimestamp
+    ? new Intl.DateTimeFormat(undefined, {
+        dateStyle: "medium",
+        timeStyle: "medium",
+      }).format(new Date(purchaseTimestamp))
+    : txnDate || "-";
+
   return (
     <div className="border-0.5 border border-[#EEEFF1] bg-white rounded-[12px] px-4">
       <div className="text-txt-tertiary flex justify-between items-center py-5">
-        <p>Date purchased</p> <p>{txnDate || "-"}</p>
+        <p>Purchase timestamp</p> <p>{formattedPurchaseTimestamp}</p>
       </div>
       <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
         <p>Maturity / Tenure</p> <p>{tenure}</p>
+      </div>
+      <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
+        <p>Discounted value</p>
+        <p>{discountedValue === null ? "Not applicable" : formatCurrency(discountedValue)}</p>
+      </div>
+      <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
+        <p>Amount remaining after partial liquidation</p>
+        <p>{remainingAmount === null ? "Not recorded" : formatCurrency(remainingAmount)}</p>
+      </div>
+      <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
+        <p>Interest reversal</p>
+        <p>{interestReversal === null ? "Not recorded" : formatCurrency(interestReversal)}</p>
       </div>
     </div>
   );

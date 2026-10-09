@@ -266,12 +266,16 @@ const Breakdown = ({
   const inputAmount = amount ? Number(amount.replace(/,/g, "")) : 0;
   const safeAmount = Number.isFinite(inputAmount) ? inputAmount : 0;
   const feesAndCharges = safeAmount * FIXED_INCOME_FEE_RATE;
-  const discountValue = safeAmount - (safeAmount * rate) / 100;
+  const discountedValue = safeAmount - (safeAmount * rate) / 100;
   const totalAmountDue = isFaceValueInstrument
-    ? discountValue + feesAndCharges
+    ? discountedValue + feesAndCharges
     : isBondInstrument
     ? safeAmount + feesAndCharges
     : safeAmount + feesAndCharges;
+  const purchaseTimestamp = new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "medium",
+  }).format(new Date());
 
   const formatCurrency = (value: number) =>
     `₦${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -281,13 +285,26 @@ const Breakdown = ({
       <div className="text-txt-tertiary flex justify-between items-center py-5">
         <p>Fees + Charges</p> <p>{formatCurrency(feesAndCharges)}</p>
       </div>
-      {isFaceValueInstrument ? (
-        <>
-          <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
-            <p>Discount value</p> <p>{formatCurrency(discountValue)}</p>
-          </div>
-        </>
-      ) : null}
+      <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
+        <p>Discounted value</p>
+        <p>
+          {isFaceValueInstrument
+            ? formatCurrency(discountedValue)
+            : "Not applicable"}
+        </p>
+      </div>
+      <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
+        <p>Amount remaining after partial liquidation</p>
+        <p>{formatCurrency(safeAmount)}</p>
+      </div>
+      <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
+        <p>Interest reversal</p>
+        <p>{formatCurrency(0)}</p>
+      </div>
+      <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
+        <p>Purchase timestamp</p>
+        <p>{purchaseTimestamp}</p>
+      </div>
       <div className="text-txt-tertiary border-t border-stroke-primary flex justify-between items-center py-5">
         <p>Total amount due</p>
         <p>{formatCurrency(totalAmountDue)}</p>

@@ -194,7 +194,9 @@ export default function MonitoringPage() {
       <CustomerDrawer
         row={selected}
         product={product}
-        transactions={filtered.filter((t) => t.customerId === selected?.customer.id)}
+        transactions={transactions.filter(
+          (t) => t.product === productKey && t.customerId === selected?.customer.id
+        )}
         onClose={() => setSelected(null)}
       />
     </>

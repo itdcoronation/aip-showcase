@@ -42,6 +42,10 @@ export const fixedIncomeTradesData: TradesFixedIncomeTableData[] = [
     current_value: 12720000,
     value_change: 6,
     fund_type: "Commercial Papers",
+    discounted_value: 9792000,
+    remaining_amount: 12000000,
+    interest_reversal: 0,
+    purchase_timestamp: "2025-04-24T10:15:00+01:00",
   },
   {
     id: "2",
@@ -54,6 +58,10 @@ export const fixedIncomeTradesData: TradesFixedIncomeTableData[] = [
     current_value: 8320000,
     value_change: 4,
     fund_type: "Bonds",
+    discounted_value: null,
+    remaining_amount: 8000000,
+    interest_reversal: 0,
+    purchase_timestamp: "2025-05-18T11:30:00+01:00",
   },
   {
     id: "3",
@@ -66,6 +74,10 @@ export const fixedIncomeTradesData: TradesFixedIncomeTableData[] = [
     current_value: 16050000,
     value_change: 7,
     fund_type: "Treasury bills",
+    discounted_value: 11775000,
+    remaining_amount: 15000000,
+    interest_reversal: 0,
+    purchase_timestamp: "2025-03-30T09:45:00+01:00",
   },
   {
     id: "5",
@@ -78,6 +90,10 @@ export const fixedIncomeTradesData: TradesFixedIncomeTableData[] = [
     current_value: 10450000,
     value_change: 4.5,
     fund_type: "Commercial Papers",
+    discounted_value: 8220000,
+    remaining_amount: 10000000,
+    interest_reversal: 0,
+    purchase_timestamp: "2025-04-06T14:20:00+01:00",
   },
 ];
 
@@ -143,6 +159,10 @@ export const fixedIncomeHistoryData: FixedIncomeHistoryTableData[] = [
     rate: 15.9,
     txn_type: "invest",
     status: "successful",
+    discounted_value: 5887000,
+    remaining_amount: 7000000,
+    interest_reversal: 0,
+    purchase_timestamp: "2025-04-24T10:15:00+01:00",
   },
   {
     id: "2",
@@ -154,6 +174,10 @@ export const fixedIncomeHistoryData: FixedIncomeHistoryTableData[] = [
     rate: 15.4,
     txn_type: "redeem",
     status: "successful",
+    discounted_value: null,
+    remaining_amount: null,
+    interest_reversal: null,
+    purchase_timestamp: null,
   },
   {
     id: "3",
@@ -165,6 +189,10 @@ export const fixedIncomeHistoryData: FixedIncomeHistoryTableData[] = [
     rate: 19.3,
     txn_type: "invest",
     status: "canceled",
+    discounted_value: 1614000,
+    remaining_amount: 0,
+    interest_reversal: 0,
+    purchase_timestamp: "2025-02-03T08:50:00+01:00",
   },
   {
     id: "4",
@@ -176,6 +204,10 @@ export const fixedIncomeHistoryData: FixedIncomeHistoryTableData[] = [
     rate: 12.4,
     txn_type: "redeem",
     status: "successful",
+    discounted_value: null,
+    remaining_amount: null,
+    interest_reversal: null,
+    purchase_timestamp: null,
   },
   {
     id: "5",
@@ -187,6 +219,10 @@ export const fixedIncomeHistoryData: FixedIncomeHistoryTableData[] = [
     rate: 16.1,
     txn_type: "invest",
     status: "successful",
+    discounted_value: 5453500,
+    remaining_amount: 6500000,
+    interest_reversal: 0,
+    purchase_timestamp: "2025-04-11T13:05:00+01:00",
   },
 ];
 

@@ -9,6 +9,22 @@ import {
   FixedIncomeHistoryTableData,
 } from "@/types/fixed-income";
 
+const formatCurrency = (amount: number | null) =>
+  amount === null
+    ? "—"
+    : `₦ ${amount.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+
+const formatTimestamp = (value: string | null) =>
+  value
+    ? new Intl.DateTimeFormat(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date(value))
+    : "—";
+
 export interface FixedIncomeActions {
   handleView: (id: string) => void;
   type: "trades" | "requests" | "history";
@@ -299,6 +315,42 @@ export const getFixedIncomeColumns = ({
                 ₦ {txn_amount}
               </div>
             );
+          },
+        },
+        {
+          accessorKey: "discounted-value",
+          header: "Discounted value",
+          cell: ({ row }) => {
+            const { discounted_value } =
+              row.original as FixedIncomeHistoryTableData;
+            return formatCurrency(discounted_value);
+          },
+        },
+        {
+          accessorKey: "remaining-amount",
+          header: "Amount remaining",
+          cell: ({ row }) => {
+            const { remaining_amount } =
+              row.original as FixedIncomeHistoryTableData;
+            return formatCurrency(remaining_amount);
+          },
+        },
+        {
+          accessorKey: "interest-reversal",
+          header: "Interest reversal",
+          cell: ({ row }) => {
+            const { interest_reversal } =
+              row.original as FixedIncomeHistoryTableData;
+            return formatCurrency(interest_reversal);
+          },
+        },
+        {
+          accessorKey: "purchase-timestamp",
+          header: "Purchase timestamp",
+          cell: ({ row }) => {
+            const { purchase_timestamp } =
+              row.original as FixedIncomeHistoryTableData;
+            return formatTimestamp(purchase_timestamp);
           },
         },
         {

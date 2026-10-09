@@ -31,6 +31,31 @@ export function CustomerDrawer({
 
   if (!row) return null;
   const { customer } = row;
+  const orderedTransactions = [...transactions].sort((a, b) =>
+    a.date.localeCompare(b.date)
+  );
+  const firstPurchase = orderedTransactions.find(
+    (transaction) =>
+      transaction.type === "investment" && transaction.status === "completed"
+  )?.date;
+  const remainingAmounts = new Map<string, number>();
+  let remainingAmount = 0;
+  for (const transaction of orderedTransactions) {
+    if (
+      transaction.type === "investment" &&
+      transaction.status === "completed"
+    ) {
+      remainingAmount += transaction.amount;
+    }
+    if (
+      (transaction.type === "partial-withdrawal" ||
+        transaction.type === "withdrawal") &&
+      transaction.status === "completed"
+    ) {
+      remainingAmount = Math.max(0, remainingAmount - transaction.amount);
+    }
+    remainingAmounts.set(transaction.id, remainingAmount);
+  }
   const metrics: [string, string][] = [
     [product.labels.invested, formatNaira(row.invested)],
     [product.labels.upfront, product.upfrontApplicable ? formatNaira(row.upfront) : "N/A"],
@@ -75,18 +100,40 @@ export function CustomerDrawer({
 
         <h3 className="mb-2 mt-6 text-sm font-semibold">Transactions</h3>
         <ul className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-          {transactions.map((t) => (
-            <li key={t.id} className="flex items-center justify-between gap-2 py-2">
+          {transactions.map((t) => {
+            const purchaseTimestamp = t.purchasedAt ?? firstPurchase;
+            return (
+              <li key={t.id} className="flex items-center justify-between gap-2 py-2">
               <div>
                 <p>{TX_TYPE_LABELS[t.type]}</p>
                 <p className="text-xs text-slate-500">{formatDate(t.date)} · {t.id}</p>
+                {product.key === "fixed-income" && (
+                  <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-500">
+                    <dt>Discounted value</dt>
+                    <dd>{t.discountedValue == null ? "Not recorded" : formatNaira(t.discountedValue)}</dd>
+                    <dt>Amount remaining after partial liquidation</dt>
+                    <dd>{formatNaira(remainingAmounts.get(t.id) ?? 0)}</dd>
+                    <dt>Interest reversal</dt>
+                    <dd>{t.interestReversal == null ? "Not recorded" : formatNaira(t.interestReversal)}</dd>
+                    <dt>Purchase timestamp</dt>
+                    <dd>
+                      {purchaseTimestamp
+                        ? new Intl.DateTimeFormat(undefined, {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }).format(new Date(purchaseTimestamp))
+                        : "Not recorded"}
+                    </dd>
+                  </dl>
+                )}
               </div>
               <div className="text-right">
                 <p className="tabular-nums">{formatNaira(t.amount)}</p>
                 <StatusBadge status={t.status} />
               </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       </aside>
     </div>

@@ -28,7 +28,7 @@ const standardLabels = {
 
 export const PRODUCTS: ProductConfig[] = [
   { key: "fixed-income", label: "Fixed Income", upfrontApplicable: true, labels: standardLabels },
-  { key: "mutual-funds", label: "Mutual Funds", upfrontApplicable: true, labels: standardLabels },
+  { key: "mutual-funds", label: "Mutual Funds", upfrontApplicable: false, labels: standardLabels },
   { key: "equities", label: "Equities", upfrontApplicable: false, labels: standardLabels },
   {
     key: "insurance",
@@ -71,6 +71,10 @@ export interface AdminTransaction {
   amount: number;
   status: TxStatus;
   date: string;
+  discountedValue?: number | null;
+  remainingAmount?: number | null;
+  interestReversal?: number | null;
+  purchasedAt?: string | null;
 }
 
 export interface AuditEntry {

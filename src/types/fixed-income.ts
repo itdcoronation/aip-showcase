@@ -9,6 +9,10 @@ export interface TradesFixedIncomeTableData {
   current_value: number;
   value_change: number;
   fund_type: string;
+  discounted_value: number | null;
+  remaining_amount: number;
+  interest_reversal: number;
+  purchase_timestamp: string;
 }
 
 export interface RequestsFixedIncomeTableData {
@@ -34,4 +38,8 @@ export interface FixedIncomeHistoryTableData {
   rate: number;
   txn_type: string;
   status: string;
+  discounted_value: number | null;
+  remaining_amount: number | null;
+  interest_reversal: number | null;
+  purchase_timestamp: string | null;
 }
