@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
         </div>
         <h1 className="text-xl font-semibold text-slate-900">Sign in</h1>
         <p className="mb-6 mt-1 text-sm text-slate-500">
-          Demo portal: any email and password will work.
+          
         </p>
 
         <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="email">
