@@ -15,6 +15,7 @@ import CurrencyInput from "react-currency-input-field";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { resolveShowcaseFixedIncomeName } from "@/lib/showcase-display-names";
+import { fixedIncomeTradesData } from "./showcase-data";
 import { isShowcaseMode } from "@/lib/showcase";
 
 const roundDownToNearestThousand = (value?: string | null) => {
@@ -78,10 +79,11 @@ const WithdrawFixedIncomeUI = () => {
   const [bank, setBank] = useState("");
   const router = useRouter();
   const { id } = useParams();
-
   const fundName = resolveShowcaseFixedIncomeName(
     typeof id === "string" ? id : undefined
   );
+  const tradeProduct = fixedIncomeTradesData.find((item) => item.id === id);
+  const maxRedemptionValue = tradeProduct?.current_value ?? 0;
   const enforceThousandRule = isShowcaseMode;
   const formSchema = createFormSchema(enforceThousandRule);
 
@@ -89,6 +91,7 @@ const WithdrawFixedIncomeUI = () => {
     handleSubmit,
     formState: { errors, isValid },
     control,
+    setValue,
   } = useForm<WithdrawFormData>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -178,12 +181,35 @@ const WithdrawFixedIncomeUI = () => {
               </div>
               <div className="flex flex-col items-start sm:items-end">
                 <p className="text-xs sm:text-sm text-txt-secondary mb-2">
-                  Maximum redemption:{" "}
+                  Maximum redemption: {" "}
                   <span className="font-semibold text-txt-primary">
-                    500,000.00
+                    {maxRedemptionValue.toLocaleString(undefined, {
+                      minimumFractionDigits: enforceThousandRule ? 0 : 2,
+                      maximumFractionDigits: enforceThousandRule ? 0 : 2,
+                    })}
                   </span>
                 </p>
-                <Button variant={"outline"} size="m" className="bg-white w-fit">
+                <Button
+                  variant={"outline"}
+                  size="m"
+                  className="bg-white w-fit"
+                  type="button"
+                  onClick={() => {
+                    const valueStr = String(maxRedemptionValue ?? 0);
+                    if (enforceThousandRule) {
+                      const rounded = roundDownToNearestThousand(valueStr);
+                      setValue("amount", rounded);
+                    } else {
+                      setValue(
+                        "amount",
+                        Number(valueStr).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      );
+                    }
+
+                    // Do not auto-submit — only prefill amount so user can complete required fields
+                    // The normal Sell button will handle submission and OTP flow.
+                  }}
+                >
                   Sell everything
                 </Button>
               </div>
@@ -238,6 +264,7 @@ const WithdrawFixedIncomeUI = () => {
                   }}
                   variant={"ghost"}
                   size={"sm"}
+                  type="button"
                 >
                   <Plus /> Add new bank account
                 </Button>

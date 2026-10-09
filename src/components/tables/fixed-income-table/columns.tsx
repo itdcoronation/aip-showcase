@@ -36,10 +36,18 @@ export const getFixedIncomeColumns = ({
           header: "Name",
 
           cell: ({ row }) => {
-            const { name, short_form, logo } =
+            const { name, short_form, logo, id } =
               row.original as TradesFixedIncomeTableData;
             return (
-              <div className="flex gap-2 items-center">
+              <div
+                className="flex gap-2 items-center cursor-pointer"
+                role="button"
+                tabIndex={0}
+                onClick={() => handleView(id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleView(id);
+                }}
+              >
                 <div className="bg-bg-secondary rounded-full p-1 w-[40px] h-[40px] flex items-center justify-center">
                   <Image
                     className="w-[26px] h-[26px]"
